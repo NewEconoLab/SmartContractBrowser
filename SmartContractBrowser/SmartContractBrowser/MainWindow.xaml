@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:SmartContractBrowser"
         xmlns:avalonedit="http://icsharpcode.net/sharpdevelop/avalonedit" x:Class="SmartContractBrowser.MainWindow"
         mc:Ignorable="d"
-        Title="MainWindow" Height="874.703" Width="1540.674">
+        Title="MainWindow" Height="874.703" Width="1540.674" Loaded="Window_Loaded">
     <Grid>
         <TabControl >
             <TabItem Header="智能合约编译">
@@ -23,9 +23,10 @@
                         <RowDefinition Height="53*"/>
                         <RowDefinition Height="88*"/>
                     </Grid.RowDefinitions>
-                    <GroupBox Header ="code" Margin="0" Grid.Row="1" Grid.RowSpan="3" Grid.ColumnSpan="2">
+                    <GroupBox Header ="code" Margin="0" Grid.Row="1" Grid.RowSpan="3" Grid.ColumnSpan="2"
+                              FocusManager.IsFocusScope="True">
                         <avalonedit:TextEditor x:Name="codeEdit"
-                                       ShowLineNumbers="True"    SyntaxHighlighting="C#" FontSize="10pt" IsReadOnly="True"/>
+                                       ShowLineNumbers="True"    SyntaxHighlighting="C#" FontSize="10pt" IsReadOnly="True" MouseDown="codeEdit_MouseDown"/>
                     </GroupBox>
                     <GroupBox Header="tools" Grid.ColumnSpan="2">
                         <Grid>
@@ -50,7 +51,7 @@
                     <GroupBox Grid.Column="3" Header="ContractHash" Margin="0" Grid.Row="2">
                         <TextBox x:Name="textScriptHash" Margin="0" TextWrapping="Wrap" Text="TextBox" IsReadOnly="True"/>
                     </GroupBox>
-                    <GroupBox Grid.Column="2" Header="AVM 汇编" Margin="0" Grid.Row="1" Grid.RowSpan="3">
+                    <GroupBox Grid.Column="2" Header="AVM 汇编" Margin="0" Grid.Row="1" Grid.RowSpan="3" FocusManager.IsFocusScope="True">
                         <ListBox x:Name="listASM" Margin="0"/>
                     </GroupBox>
 

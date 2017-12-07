@@ -1,4 +1,6 @@
-﻿using System;
+﻿using ICSharpCode.AvalonEdit;
+using ICSharpCode.AvalonEdit.Rendering;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -62,7 +64,7 @@ namespace SmartContractBrowser
                     {
                         listASM.Items.Add(o);
                     }
-                    if(ops.Length>0&&ops.Last().error==true)
+                    if (ops.Length > 0 && ops.Last().error == true)
                     {
                         listASM.Items.Add("fail end.");
                     }
@@ -171,6 +173,48 @@ namespace SmartContractBrowser
             System.IO.File.WriteAllBytes(targetAvmFile, this.buildResult.avm);
             System.IO.File.WriteAllText(targetDebugFile, this.buildResult.debuginfo);
 
+        }
+
+        private void codeEdit_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            ICSharpCode.AvalonEdit.TextEditor code = codeEdit;
+
+        }
+        public class HighlightCurrentLineBackgroundRenderer : IBackgroundRenderer
+        {
+            private TextEditor _editor;
+
+            public HighlightCurrentLineBackgroundRenderer(TextEditor editor)
+            {
+                _editor = editor;
+            }
+
+            public KnownLayer Layer
+            {
+                get { return KnownLayer.Caret; }
+            }
+
+            public void Draw(TextView textView, DrawingContext drawingContext)
+            {
+                if (_editor.Document == null)
+                    return;
+
+                textView.EnsureVisualLines();
+                var currentLine = _editor.Document.GetLineByOffset(_editor.CaretOffset);
+                foreach (var rect in BackgroundGeometryBuilder.GetRectsForSegment(textView, currentLine))
+                {
+                    drawingContext.DrawRectangle(
+                        new SolidColorBrush(Color.FromArgb(0x40, 0, 0, 0xFF)), null,
+                        new Rect(rect.Location, new Size(textView.ActualWidth - 32, rect.Height)));
+                }
+            }
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            ICSharpCode.AvalonEdit.TextEditor code = codeEdit;
+            code.TextArea.TextView.BackgroundRenderers.Add(
+    new HighlightCurrentLineBackgroundRenderer(code));
         }
     }
 }
