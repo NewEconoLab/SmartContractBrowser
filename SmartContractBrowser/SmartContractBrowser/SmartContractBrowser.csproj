@@ -107,6 +107,10 @@
     </Resource>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\avm2asm\avm2asm.csproj">
+      <Project>{3113ea6d-47d2-449f-b6d6-ac5710cb36e1}</Project>
+      <Name>avm2asm</Name>
+    </ProjectReference>
     <ProjectReference Include="..\neondebug\neondebug.csproj">
       <Project>{47cec62d-0f4a-434d-a621-1b6433d427a4}</Project>
       <Name>neondebug</Name>

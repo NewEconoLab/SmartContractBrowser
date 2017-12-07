@@ -33,28 +33,39 @@ namespace SmartContractBrowser
              };
             this.Dispatcher.Invoke(safelog, log);
         }
-
+        Result buildResult = null;
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             Microsoft.Win32.OpenFileDialog ofd = new Microsoft.Win32.OpenFileDialog();
             ofd.Filter = "*.dll|*.dll";
             if (ofd.ShowDialog() == true)
             {
+                buildResult = null;
                 labelDll.Content = ofd.FileName;
                 try
                 {
-                    var r = CompileDll(this,ofd.FileName);
+                    this.buildResult = CompileDll(this, ofd.FileName);
 
-                    this.codeEdit.Load(r.srcfile);
-                    this.Log("cs file=" + r.srcfile);
+                    this.codeEdit.Load(buildResult.srcfile);
+                    this.Log("cs file=" + buildResult.srcfile);
                     StringBuilder hexscript = new StringBuilder();
-                    foreach (var b in r.avm)
+                    foreach (var b in buildResult.avm)
                     {
                         hexscript.Append(b.ToString("x02"));
                     }
                     textHexScript.Text = hexscript.ToString();
-                    textScriptHash.Text = r.script_hash;
-                    textDebugInfo.Text = r.debuginfo;
+                    textScriptHash.Text = buildResult.script_hash;
+                    textDebugInfo.Text = buildResult.debuginfo;
+                    var ops = Neo.Compiler.Avm2Asm.Trans(buildResult.avm);
+                    listASM.Items.Clear();
+                    foreach (var o in ops)
+                    {
+                        listASM.Items.Add(o);
+                    }
+                    if(ops.Length>0&&ops.Last().error==true)
+                    {
+                        listASM.Items.Add("fail end.");
+                    }
                 }
                 catch (Exception err)
                 {
@@ -84,7 +95,7 @@ namespace SmartContractBrowser
             public string debuginfo;
         }
 
-        private static Result CompileDll(Neo.Compiler.ILogger logger,string name)
+        private static Result CompileDll(Neo.Compiler.ILogger logger, string name)
         {
             Result r = new Result();
             var namepdb = name.Substring(0, name.Length - 4) + ".pdb";
@@ -140,6 +151,26 @@ namespace SmartContractBrowser
                 r.script_hash = hashstr;
             }
             return r;
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            var filename = this.buildResult.script_hash;
+            var targetpath = textTargetScriptPath.Text;
+            if (System.IO.Directory.Exists(targetpath) == false)
+                System.IO.Directory.CreateDirectory(targetpath);
+
+            var targetSrcFile = System.IO.Path.Combine(targetpath, filename + ".cs");
+            var targetAvmFile = System.IO.Path.Combine(targetpath, filename + ".avm");
+            var targetDebugFile = System.IO.Path.Combine(targetpath, filename + ".debug.json");
+            System.IO.File.Delete(targetSrcFile);
+            System.IO.File.Delete(targetAvmFile);
+            System.IO.File.Delete(targetDebugFile);
+
+            System.IO.File.Copy(this.buildResult.srcfile, targetSrcFile);
+            System.IO.File.WriteAllBytes(targetAvmFile, this.buildResult.avm);
+            System.IO.File.WriteAllText(targetDebugFile, this.buildResult.debuginfo);
+
         }
     }
 }

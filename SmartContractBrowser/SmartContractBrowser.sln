@@ -15,6 +15,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "compile", "compile", "{E024
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "neondebug", "neondebug\neondebug.csproj", "{47CEC62D-0F4A-434D-A621-1B6433D427A4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "avm2asm", "avm2asm\avm2asm.csproj", "{3113EA6D-47D2-449F-B6D6-AC5710CB36E1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,6 +43,10 @@ Global
 		{47CEC62D-0F4A-434D-A621-1B6433D427A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{47CEC62D-0F4A-434D-A621-1B6433D427A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{47CEC62D-0F4A-434D-A621-1B6433D427A4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3113EA6D-47D2-449F-B6D6-AC5710CB36E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3113EA6D-47D2-449F-B6D6-AC5710CB36E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3113EA6D-47D2-449F-B6D6-AC5710CB36E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3113EA6D-47D2-449F-B6D6-AC5710CB36E1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
