@@ -112,6 +112,28 @@ namespace SmartContractBrowser
                 if (script == null && treenodep != null)
                     script = treenodep.Tag as Neo.SmartContract.Debug.LogScript;
             }
+            listStack.Items.Clear();
+            listAltStack.Items.Clear();
+            var stateid = -1;
+            if (logop != null)
+            {
+                if (this.debugtool.simvm.mapState.ContainsKey(logop))
+                {
+                    stateid = debugtool.simvm.mapState[logop];
+                    if (debugtool.simvm.stateClone.ContainsKey(stateid))
+                    {
+                        var state = debugtool.simvm.stateClone[stateid];
+                        foreach (var l in state.CalcStack)
+                        {
+                            listStack.Items.Add(l);
+                        }
+                        foreach (var l in state.AltStack)
+                        {
+                            listAltStack.Items.Add(l);
+                        }
+                    }
+                }
+            }
             if (script == null)
             {
                 selectScript.Content = "未选中脚本";
@@ -148,6 +170,7 @@ namespace SmartContractBrowser
                             }
 
                         }
+
                     }
                 }
                 else

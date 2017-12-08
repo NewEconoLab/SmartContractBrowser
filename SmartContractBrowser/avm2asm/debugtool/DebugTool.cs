@@ -17,6 +17,7 @@ namespace Neo.Debug
         public string pathScript;
         public Dictionary<string, DebugScript> scripts = new Dictionary<string, DebugScript>();
         public SmartContract.Debug.FullLog fullLog;
+        public SimVM simvm = new SimVM();
         public bool LoadScript(string scriptid)
         {
             var scriptAvm = System.IO.Path.Combine(pathScript, scriptid + ".avm");
@@ -61,6 +62,7 @@ namespace Neo.Debug
                 fullLog = SmartContract.Debug.FullLog.FromJson(json);
             }
             //循环所有的
+            simvm.Execute(fullLog);
         }
         public static byte[] HexString2Bytes(string str)
         {

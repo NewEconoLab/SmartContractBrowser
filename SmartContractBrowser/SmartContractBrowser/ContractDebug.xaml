@@ -12,8 +12,8 @@
     <Grid Background="#FFE5E5E5" FocusManager.IsFocusScope="True">
         <Grid.RowDefinitions>
             <RowDefinition Height="160*"/>
-            <RowDefinition Height="129*"/>
-            <RowDefinition Height="312*"/>
+            <RowDefinition Height="191*"/>
+            <RowDefinition Height="250*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="205*"/>
@@ -50,12 +50,22 @@
         </GroupBox>
         <GroupBox Grid.Column="1" Header="Info"  Grid.Row="1">
             <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="50*"/>
+                    <RowDefinition Height="58*"/>
+                    <RowDefinition Height="16*"/>
+                    <RowDefinition Height="45*"/>
+                </Grid.RowDefinitions>
                 <Label x:Name="selectScript" Content="Label" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-                <Label x:Name="selectScriptDebug" Content="Label" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,30,0,0"/>
+                <Label x:Name="selectScriptDebug" Content="Label" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,25,0,0"/>
+                <ListBox x:Name="listStack" Grid.Row="1"/>
+                <Label Content="上面是执行栈，下面是计算栈"  Grid.Row="2"/>
+
+                <ListBox x:Name="listAltStack" Grid.Row="3"/>
 
             </Grid>
         </GroupBox>
-        <GroupBox Header ="code" Margin="0" Grid.Row="1" Grid.RowSpan="3" Grid.ColumnSpan="2"
+        <GroupBox Header ="code" Margin="0" Grid.Row="1" Grid.RowSpan="2"
                               FocusManager.IsFocusScope="True" Grid.Column="2">
             <avalonedit:TextEditor x:Name="codeEdit"
                                        ShowLineNumbers="True"    SyntaxHighlighting="C#" FontSize="10pt" IsReadOnly="True" />

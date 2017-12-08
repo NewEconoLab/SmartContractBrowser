@@ -20,6 +20,7 @@ namespace Neo.SmartContract.Debug
         Non,
         Clear,
         Insert,
+        Peek,
         Pop,
         Push,
         Remove,
@@ -40,6 +41,77 @@ namespace Neo.SmartContract.Debug
         public string type;
         public string strvalue;
         public List<StackItem> subItems;
+        public StackItem Clone()
+        {
+            if (this.type != "Struct")
+                return this;
+            StackItem item = new StackItem();
+            item.type = this.type;
+            item.strvalue = this.strvalue;
+            if (this.subItems != null)
+            {
+                item.subItems = new List<StackItem>();
+                foreach (var i in this.subItems)
+                {
+                    item.subItems.Add(i.Clone());
+                }
+            }
+            return item;
+        }
+        public int AsInt()
+        {
+            return int.Parse(strvalue);
+        }
+        public System.Numerics.BigInteger AsBigInteger()
+        {
+            return System.Numerics.BigInteger.Parse(strvalue);
+        }
+        public byte[] asBytes()
+        {
+            return null;
+        }
+        public override string ToString()
+        {
+            if (type == "Array" || type == "Struct")
+            {
+                string outstr = type + "[";
+                for(var i=0;i<subItems.Count;i++)
+                {
+                    outstr += subItems[i].ToShortString();
+                    if(i!=subItems.Count-1)
+                    {
+                        outstr += ",";
+                    }
+                }
+                outstr += "]";
+                return outstr;
+            }
+            else
+            {
+                return type + ":" + strvalue;
+            }
+        }
+        public string ToShortString()
+        {
+            if (type == "Array" || type == "Struct")
+            {
+                string outstr =  "[";
+                for (var i = 0; i < subItems.Count; i++)
+                {
+                    outstr += subItems[i].ToShortString();
+                    if (i != subItems.Count - 1)
+                    {
+                        outstr += ",";
+                    }
+                }
+                outstr += "]";
+                return outstr;
+            }
+            else
+            {
+                return strvalue;
+            }
+        }
         //public static MyJson.JsonNode_Object StatkItemToJson(StackItem item)
         //{
         //    //MyJson.JsonNode_Object json = new MyJson.JsonNode_Object();

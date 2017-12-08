@@ -35,6 +35,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Numerics" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -49,9 +50,11 @@
     <Compile Include="debugtool\addresstool.cs" />
     <Compile Include="debugtool\DebugTool.cs" />
     <Compile Include="debugtool\FullLogRead.cs" />
+    <Compile Include="debugtool\SimVM.cs" />
     <Compile Include="myjson.cs" />
     <Compile Include="OpCode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RandomAccessStack.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
