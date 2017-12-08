@@ -1,6 +1,4 @@
-﻿using ICSharpCode.AvalonEdit;
-using ICSharpCode.AvalonEdit.Rendering;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,14 +16,13 @@ using System.Windows.Shapes;
 namespace SmartContractBrowser
 {
     /// <summary>
-    /// MainWindow.xaml 的交互逻辑
+    /// ContractDebug.xaml 的交互逻辑
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class ContractDebug : Page
     {
-        public MainWindow()
+        public ContractDebug()
         {
             InitializeComponent();
         }
-
     }
 }

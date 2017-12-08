@@ -4,61 +4,18 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SmartContractBrowser"
-        xmlns:avalonedit="http://icsharpcode.net/sharpdevelop/avalonedit" x:Class="SmartContractBrowser.MainWindow"
+            x:Class="SmartContractBrowser.MainWindow"
         mc:Ignorable="d"
-        Title="MainWindow" Height="874.703" Width="1540.674" Loaded="Window_Loaded">
+        Title="MainWindow" Height="874.703" Width="1540.674" >
     <Grid>
         <TabControl >
             <TabItem Header="智能合约编译">
-                <Grid Background="#FFE5E5E5">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="47*"/>
-                        <ColumnDefinition Width="628*"/>
-                        <ColumnDefinition Width="264*"/>
-                        <ColumnDefinition Width="588*"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="175*"/>
-                        <RowDefinition Height="183*"/>
-                        <RowDefinition Height="53*"/>
-                        <RowDefinition Height="88*"/>
-                    </Grid.RowDefinitions>
-                    <GroupBox Header ="code" Margin="0" Grid.Row="1" Grid.RowSpan="3" Grid.ColumnSpan="2"
-                              FocusManager.IsFocusScope="True">
-                        <avalonedit:TextEditor x:Name="codeEdit"
-                                       ShowLineNumbers="True"    SyntaxHighlighting="C#" FontSize="10pt" IsReadOnly="True" MouseDown="codeEdit_MouseDown"/>
-                    </GroupBox>
-                    <GroupBox Header="tools" Grid.ColumnSpan="2">
-                        <Grid>
-
-
-                            <Button Content="load dotnet dll" HorizontalAlignment="Left" Margin="10,80,0,0" VerticalAlignment="Top" Width="107" Click="Button_Click"/>
-                            <Label x:Name="labelDll" Content="Label" HorizontalAlignment="Left" Margin="10,94,0,0" VerticalAlignment="Top" RenderTransformOrigin="-1.76,0.148"/>
-                            <TextBlock HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" Text="你需要使用这个编译器的原因是：neon没有生成字节码和源码的关系。而这个编译器可以，其他部分和neon兼容。另外你需要按保存到按钮，将编译结果保存到一起。调试工具需要读取" VerticalAlignment="Top" Height="65"/>
-                            <Button Content="保存到" HorizontalAlignment="Left" Margin="10,124,0,0" VerticalAlignment="Top" Width="81" Click="Button_Click_1"/>
-                            <TextBox x:Name="textTargetScriptPath" HorizontalAlignment="Left" Height="23" Margin="125,120,0,0" TextWrapping="Wrap" Text="d:\Neo\ScriptDebug" VerticalAlignment="Top" Width="185"/>
-                        </Grid>
-                    </GroupBox>
-                    <GroupBox Grid.Column="2" Header="debuginfo" Grid.ColumnSpan="2" Margin="1">
-                        <ListBox x:Name="listDebug" Margin="0"/>
-                    </GroupBox>
-                    <GroupBox Header="ContractHex" Margin="0,0,-1,0" Grid.Column="3" Grid.Row="1">
-                        <TextBox x:Name="textHexScript" Margin="1,0,0,0" TextWrapping="Wrap" Text="TextBlock" IsReadOnly="True"/>
-                    </GroupBox>
-                    <GroupBox Header="ContractDebugInfo" Grid.Row="3" Grid.Column="3">
-                        <TextBox x:Name="textDebugInfo" Grid.Column="1" Margin="0" Grid.Row="1" TextWrapping="Wrap" Text="TextBox" IsReadOnly="True" Grid.RowSpan="2"/>
-                    </GroupBox>
-                    <GroupBox Grid.Column="3" Header="ContractHash" Margin="0" Grid.Row="2">
-                        <TextBox x:Name="textScriptHash" Margin="0" TextWrapping="Wrap" Text="TextBox" IsReadOnly="True"/>
-                    </GroupBox>
-                    <GroupBox Grid.Column="2" Header="AVM 汇编" Margin="0" Grid.Row="1" Grid.RowSpan="3" FocusManager.IsFocusScope="True">
-                        <ListBox x:Name="listASM" Margin="0"/>
-                    </GroupBox>
-
-                </Grid>
+                <Frame Content="Frame" Source="/SmartContractBrowser;component/ContractCompiler.xaml">
+                    
+                </Frame>
             </TabItem>
-            <TabItem Header="TabItem">
-                <Grid Background="#FFE5E5E5"/>
+            <TabItem Header="交易调试器">
+                <Frame Content="Frame" Margin="0" Source="/SmartContractBrowser;component/ContractDebug.xaml"/>
             </TabItem>
         </TabControl>
 
