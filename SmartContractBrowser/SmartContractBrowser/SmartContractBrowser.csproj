@@ -80,6 +80,7 @@
     <Compile Include="ContractDebug.xaml.cs">
       <DependentUpon>ContractDebug.xaml</DependentUpon>
     </Compile>
+    <Compile Include="helper\addresstool.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>

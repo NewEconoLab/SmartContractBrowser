@@ -41,6 +41,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="avm2asm.cs" />
+    <Compile Include="byteReader.cs" />
+    <Compile Include="op.cs" />
     <Compile Include="OpCode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

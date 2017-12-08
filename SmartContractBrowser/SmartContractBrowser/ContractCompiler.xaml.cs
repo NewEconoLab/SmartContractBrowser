@@ -46,7 +46,7 @@ namespace SmartContractBrowser
 
             public KnownLayer Layer
             {
-                get { return KnownLayer.Caret; }
+                get { return KnownLayer.Selection; }
             }
 
             public void Draw(TextView textView, DrawingContext drawingContext)
@@ -65,6 +65,7 @@ namespace SmartContractBrowser
             }
         }
         Result buildResult = null;
+        Neo.Helper.DebugInfo debugInfo = null;
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             Microsoft.Win32.OpenFileDialog ofd = new Microsoft.Win32.OpenFileDialog();
@@ -88,6 +89,8 @@ namespace SmartContractBrowser
                     textScriptHash.Text = buildResult.script_hash;
                     textDebugInfo.Text = buildResult.debuginfo;
                     var ops = Neo.Compiler.Avm2Asm.Trans(buildResult.avm);
+                    var djson = Neo.Compiler.MyJson.Parse(buildResult.debuginfo) as Neo.Compiler.MyJson.JsonNode_Array;
+                    debugInfo = Neo.Helper.DebugInfo.FromJson(djson);
                     listASM.Items.Clear();
                     foreach (var o in ops)
                     {
@@ -186,8 +189,28 @@ namespace SmartContractBrowser
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
             ICSharpCode.AvalonEdit.TextEditor code = codeEdit;
-            code.TextArea.TextView.BackgroundRenderers.Add(
+            codeEdit.TextArea.TextView.BackgroundRenderers.Add(
     new HighlightCurrentLineBackgroundRenderer(code));
+            codeEdit.TextArea.Caret.PositionChanged += (s, ee) =>
+              {
+                  if (this.debugInfo == null)
+                      return;
+                  var pos = codeEdit.CaretOffset;
+                  var line = codeEdit.Document.GetLineByOffset(pos).LineNumber;
+                  var addr = this.debugInfo.GetAddrBack(line);
+                  if (addr >= 0)
+                  {
+                      foreach (Neo.Compiler.Op item in this.listASM.Items)
+                      {
+                          if (item != null && item.addr == addr)
+                          {
+                              this.listASM.SelectedItem = item;
+                              this.listASM.ScrollIntoView(item);
+                              break;
+                          }
+                      }
+                  }
+              };
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
@@ -207,6 +230,24 @@ namespace SmartContractBrowser
             System.IO.File.Copy(this.buildResult.srcfile, targetSrcFile);
             System.IO.File.WriteAllBytes(targetAvmFile, this.buildResult.avm);
             System.IO.File.WriteAllText(targetDebugFile, this.buildResult.debuginfo);
+        }
+
+        private void listASM_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var op = this.listASM.SelectedItem as Neo.Compiler.Op;
+            if (op == null) return;
+            var line = this.debugInfo.GetLineBack(op.addr);
+            textAsm.Text = "srcline=" + line;
+            if (line > 0)
+            {
+                var ioff = this.codeEdit.Document.Lines[line - 1].Offset;
+                var len = this.codeEdit.Document.Lines[line - 1].Length;
+                this.codeEdit.CaretOffset = ioff;
+                //this.codeEdit.Select(ioff, 0);
+                this.codeEdit.ScrollToLine(line - 1);
+                codeEdit.TextArea.TextView.InvalidateLayer(KnownLayer.Background);
+            }
+
         }
     }
 }

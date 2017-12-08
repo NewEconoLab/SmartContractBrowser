@@ -51,7 +51,15 @@
             <TextBox x:Name="textScriptHash" Margin="0" TextWrapping="Wrap" Text="TextBox" IsReadOnly="True"/>
         </GroupBox>
         <GroupBox Grid.Column="2" Header="AVM 汇编" Margin="0" Grid.Row="1" Grid.RowSpan="3" FocusManager.IsFocusScope="True">
-            <ListBox x:Name="listASM" Margin="0"/>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="25*"/>
+                    <RowDefinition Height="346*"/>
+                </Grid.RowDefinitions>
+                <ListBox x:Name="listASM" Margin="0" SelectionChanged="listASM_SelectionChanged" Grid.Row="1" MinHeight="3"/>
+                <TextBlock x:Name="textAsm" TextWrapping="Wrap" Text="TextBlock"/>
+            </Grid>
+
         </GroupBox>
 
     </Grid>
