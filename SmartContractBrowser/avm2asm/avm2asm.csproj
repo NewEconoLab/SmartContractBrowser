@@ -30,6 +30,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ICSharpCode.SharpZipLib, Version=0.86.0.518, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -40,11 +43,24 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="avm2asm.cs" />
-    <Compile Include="byteReader.cs" />
-    <Compile Include="op.cs" />
+    <Compile Include="avm2asm\avm2asm.cs" />
+    <Compile Include="avm2asm\byteReader.cs" />
+    <Compile Include="avm2asm\op.cs" />
+    <Compile Include="debugtool\addresstool.cs" />
+    <Compile Include="debugtool\DebugTool.cs" />
+    <Compile Include="debugtool\FullLogRead.cs" />
+    <Compile Include="myjson.cs" />
     <Compile Include="OpCode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SevenZip\SevenZip.csproj">
+      <Project>{4960dd14-3431-47ec-b9d9-9d2730a98dc3}</Project>
+      <Name>SevenZip</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

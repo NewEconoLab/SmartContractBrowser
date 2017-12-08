@@ -65,7 +65,7 @@ namespace SmartContractBrowser
             }
         }
         Result buildResult = null;
-        Neo.Helper.DebugInfo debugInfo = null;
+        Neo.Debug.Helper.AddrMap debugInfo = null;
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             Microsoft.Win32.OpenFileDialog ofd = new Microsoft.Win32.OpenFileDialog();
@@ -89,8 +89,7 @@ namespace SmartContractBrowser
                     textScriptHash.Text = buildResult.script_hash;
                     textDebugInfo.Text = buildResult.debuginfo;
                     var ops = Neo.Compiler.Avm2Asm.Trans(buildResult.avm);
-                    var djson = Neo.Compiler.MyJson.Parse(buildResult.debuginfo) as Neo.Compiler.MyJson.JsonNode_Array;
-                    debugInfo = Neo.Helper.DebugInfo.FromJson(djson);
+                    debugInfo = Neo.Debug.Helper.AddrMap.FromJsonStr(buildResult.debuginfo);
                     listASM.Items.Clear();
                     foreach (var o in ops)
                     {

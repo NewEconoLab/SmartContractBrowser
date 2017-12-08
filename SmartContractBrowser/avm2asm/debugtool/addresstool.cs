@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Neo.Helper
+namespace Neo.Debug.Helper
 {
 
-    public class DebugInfo
+    public class AddrMap
     {
         List<MethodInfo> methods = new List<MethodInfo>();
         public int GetAddr(int line)
@@ -50,9 +50,13 @@ namespace Neo.Helper
             }
             return -1;
         }
-        public static DebugInfo FromJson(Neo.Compiler.MyJson.JsonNode_Array json)
+        public static AddrMap FromJsonStr(string jsonstr)
         {
-            DebugInfo info = new DebugInfo();
+            return FromJson(MyJson.Parse(jsonstr) as MyJson.JsonNode_Array);
+        }
+        static AddrMap FromJson(MyJson.JsonNode_Array json)
+        {
+            AddrMap info = new AddrMap();
             foreach (var item in json)
             {
                 MethodInfo minfo = new MethodInfo();
