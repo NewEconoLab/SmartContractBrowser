@@ -135,10 +135,6 @@
       <Project>{47cec62d-0f4a-434d-a621-1b6433d427a4}</Project>
       <Name>neondebug</Name>
     </ProjectReference>
-    <ProjectReference Include="..\vm\vm.csproj">
-      <Project>{056130c9-8702-4564-9074-c5e063813ce0}</Project>
-      <Name>vm</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

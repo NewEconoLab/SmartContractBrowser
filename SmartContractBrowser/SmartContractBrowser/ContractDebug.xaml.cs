@@ -87,7 +87,13 @@ namespace SmartContractBrowser
             foreach (var op in script.ops)
             {
                 TreeViewItem itemop = new TreeViewItem();
+
                 itemop.Header = op.GetHeader();
+                if (op.op == Neo.VM.OpCode.SYSCALL && op.param != null)
+                {
+                    string p = System.Text.Encoding.ASCII.GetString(op.param);
+                    itemop.Header = op.GetHeader() + " " + p;
+                }
                 itemop.Tag = op;
                 treeitem.Items.Add(itemop);
                 if (op.subScript != null)

@@ -6,15 +6,94 @@ using System.Text;
 
 namespace Neo.VM
 {
+    public class ExecutionStackRecord : RandomAccessStack<StackItem>
+    {
+        public enum OpType
+        {
+            Non,
+            Clear,
+            Insert,
+            Peek,
+            Pop,
+            Push,
+            Remove,
+            Set,
+        }
+        public struct Op
+        {
+            public Op(OpType type, int ind = -1)
+            {
+                this.type = type;
+                this.ind = ind;
+            }
+            public OpType type;
+            public int ind;
+        }
+
+        public System.Collections.Generic.List<Op> record = new System.Collections.Generic.List<Op>();
+        public void ClearRecord()
+        {
+            record.Clear();
+        }
+        public OpType GetLastRecordType()
+        {
+            if (record.Count == 0)
+                return OpType.Non;
+            else
+                return record.Last().type;
+        }
+        public new void Clear()
+        {
+            record.Add(new Op(OpType.Clear));
+            base.Clear();
+        }
+        public new void Insert(int index, StackItem item)
+        {
+            record.Add(new Op(OpType.Insert, index));
+            base.Insert(index, item);
+        }
+        public new StackItem Peek(int index = 0)
+        {
+            record.Add(new Op(OpType.Peek, index));
+            return base.Peek();
+        }
+
+        public new StackItem Pop()
+        {
+            record.Add(new Op(OpType.Pop));
+            return base.Remove(0);
+        }
+
+        public new void Push(StackItem item)
+        {
+            record.Add(new Op(OpType.Push));
+            base.Push(item);
+        }
+
+        public new StackItem Remove(int index)
+        {
+            if (index == 0)
+                return Pop();
+
+            record.Add(new Op(OpType.Remove, index));
+            return base.Remove(index);
+        }
+
+        public new void Set(int index, StackItem item)
+        {
+            record.Add(new Op(OpType.Set, index));
+            base.Set(index, item);
+        }
+    }
     public class ExecutionEngine : IDisposable
     {
         private readonly IScriptTable table;
-        private readonly InteropService service;
+        protected readonly InteropService service;
 
         public IScriptContainer ScriptContainer { get; }
         public ICrypto Crypto { get; }
         public RandomAccessStack<ExecutionContext> InvocationStack { get; } = new RandomAccessStack<ExecutionContext>();
-        public RandomAccessStack<StackItem> EvaluationStack { get; } = new RandomAccessStack<StackItem>();
+        public ExecutionStackRecord EvaluationStack { get; } = new ExecutionStackRecord();
         public RandomAccessStack<StackItem> AltStack { get; } = new RandomAccessStack<StackItem>();
         public ExecutionContext CurrentContext => InvocationStack.Peek();
         public ExecutionContext CallingContext => InvocationStack.Count > 1 ? InvocationStack.Peek(1) : null;
@@ -29,12 +108,12 @@ namespace Neo.VM
             this.service = service ?? new InteropService();
         }
 
-        public void AddBreakPoint(uint position)
+        public virtual void AddBreakPoint(uint position)
         {
             CurrentContext.BreakPoints.Add(position);
         }
 
-        public void Dispose()
+        public virtual void Dispose()
         {
             while (InvocationStack.Count > 0)
                 InvocationStack.Pop().Dispose();
@@ -199,19 +278,10 @@ namespace Neo.VM
                                 State |= VMState.FAULT;
                                 return;
                             }
+                            
                             byte[] script_hash = context.OpReader.ReadBytes(20);
-
-                            //dynamic scripthash
-                            bool allzero = true;
-                            for (var i = 0; i < script_hash.Length; i++)
-                            {
-                                if (script_hash[i] > 0)
-                                {
-                                    allzero = false;
-                                    break;
-                                }
-                            }
-                            if (allzero)
+                            SetParam(opcode, script_hash);
+                            if (script_hash.All(p => p == 0))
                             {
                                 script_hash = EvaluationStack.Pop().GetByteArray();
                             }
@@ -224,12 +294,17 @@ namespace Neo.VM
                             }
                             if (opcode == OpCode.TAILCALL)
                                 InvocationStack.Pop().Dispose();
+
                             LoadScript(script);
                         }
                         break;
                     case OpCode.SYSCALL:
-                        if (!service.Invoke(Encoding.ASCII.GetString(context.OpReader.ReadVarBytes(252)), this))
-                            State |= VMState.FAULT;
+                        {
+                            byte[] data = context.OpReader.ReadVarBytes(252);
+                            SetParam(opcode, data);
+                            if (!service.Invoke(Encoding.ASCII.GetString(data), this))
+                                State |= VMState.FAULT;
+                        }
                         break;
 
                     // Stack ops
@@ -875,19 +950,22 @@ namespace Neo.VM
                     State |= VMState.BREAK;
             }
         }
+        public virtual void SetParam(VM.OpCode opcode, byte[] opdata)
+        {
 
-        public void LoadScript(byte[] script, bool push_only = false)
+        }
+        public virtual void LoadScript(byte[] script, bool push_only = false)
         {
             InvocationStack.Push(new ExecutionContext(this, script, push_only));
         }
 
-        public bool RemoveBreakPoint(uint position)
+        public virtual bool RemoveBreakPoint(uint position)
         {
             if (InvocationStack.Count == 0) return false;
             return CurrentContext.BreakPoints.Remove(position);
         }
 
-        public void StepInto()
+        public virtual void StepInto()
         {
             if (InvocationStack.Count == 0) State |= VMState.HALT;
             if (State.HasFlag(VMState.HALT) || State.HasFlag(VMState.FAULT)) return;
@@ -902,7 +980,7 @@ namespace Neo.VM
             }
         }
 
-        public void StepOut()
+        public virtual void StepOut()
         {
             State &= ~VMState.BREAK;
             int c = InvocationStack.Count;
@@ -910,7 +988,7 @@ namespace Neo.VM
                 StepInto();
         }
 
-        public void StepOver()
+        public virtual void StepOver()
         {
             if (State.HasFlag(VMState.HALT) || State.HasFlag(VMState.FAULT)) return;
             State &= ~VMState.BREAK;

@@ -222,6 +222,7 @@ namespace Neo.SmartContract.Debug
         //public string syscall;
         //public string[] syscallinfo;
         public Op[] stack;
+        public byte[] param;
         public StackItem opresult;
         public string GetHeader()
         {
@@ -323,6 +324,10 @@ namespace Neo.SmartContract.Debug
                     var type = (OpType)Enum.Parse(typeof(OpType), str);
                     _op.stack[i] = new Op(type, ind);
                 }
+            }
+            if(json.ContainsKey("param"))
+            {
+                _op.param = Neo.Debug.DebugTool.HexString2Bytes(json["param"].AsString());
             }
             if (json.ContainsKey("result"))
             {

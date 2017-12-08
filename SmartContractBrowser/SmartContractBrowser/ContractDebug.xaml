@@ -17,10 +17,16 @@
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="205*"/>
-            <ColumnDefinition Width="130*"/>
-            <ColumnDefinition Width="391*"/>
+            <ColumnDefinition Width="66*"/>
+            <ColumnDefinition Width="64*"/>
+            <ColumnDefinition Width="117*"/>
+            <ColumnDefinition Width="115*"/>
+            <ColumnDefinition Width="159*"/>
         </Grid.ColumnDefinitions>
-        <GroupBox Header="调试数据源" Margin="0" Grid.Column="2">
+        <GroupBox Header="数值查看工具" Grid.Column="2" Grid.ColumnSpan="2">
+            <TreeView></TreeView>
+        </GroupBox>
+        <GroupBox Header="调试数据源" Margin="0" Grid.Column="4" Grid.ColumnSpan="2">
             <Grid>
                 <Label Content="此处使用文件夹作为数据源，正式环境将使用服务器数据源" HorizontalAlignment="Left" Margin="4,5,0,0" VerticalAlignment="Top"/>
                 <TextBox x:Name="textLogPath" HorizontalAlignment="Left" Height="23" Margin="172,30,0,0" TextWrapping="Wrap" Text="D:\Neo\FullLogs" VerticalAlignment="Top" Width="182"/>
@@ -36,7 +42,7 @@
                     <RowDefinition Height="99*"/>
                 </Grid.RowDefinitions>
                 <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="交易ID" VerticalAlignment="Top"/>
-                <TextBox x:Name="textTid" HorizontalAlignment="Left" Height="39" Margin="10,20,0,0" TextWrapping="Wrap" Text="0xc120c8a6098da0f6c7e590d3b36ba93af31e9b17f11a6c780c2638e8e2149844" VerticalAlignment="Top" Width="282"/>
+                <TextBox x:Name="textTid" HorizontalAlignment="Left" Height="39" Margin="10,20,0,0" TextWrapping="Wrap" Text="0xfc84ab554efb7b2e1e18eb5cdb63d2220bc10eac336ff6957af4775b2c8cb5ac" VerticalAlignment="Top" Width="282"/>
                 <Button Content="加载交易" HorizontalAlignment="Left" Margin="10,64,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click" Grid.RowSpan="2"/>
                 <ListBox x:Name="listLoadInfo" Margin="0,0,1,0" Grid.Row="1"/>
 
@@ -45,10 +51,10 @@
         <GroupBox Header="执行顺序" Margin="0" Grid.Row="1" Grid.ColumnSpan="1" Grid.RowSpan="2">
             <TreeView x:Name="treeCode" SelectedItemChanged="treeCode_SelectedItemChanged"  FocusManager.IsFocusScope="True"/>
         </GroupBox>
-        <GroupBox Grid.Column="1" Header="AVM ASM" Margin="0" Grid.Row="2" Grid.RowSpan="1">
+        <GroupBox Grid.Column="1" Header="AVM ASM" Margin="0" Grid.Row="2" Grid.RowSpan="1" Grid.ColumnSpan="2">
             <ListBox x:Name="listBoxASM" FocusManager.IsFocusScope="True" SelectionChanged="listBoxASM_SelectionChanged" />
         </GroupBox>
-        <GroupBox Grid.Column="1" Header="Info"  Grid.Row="1">
+        <GroupBox Grid.Column="1" Header="Info"  Grid.Row="1" Grid.ColumnSpan="2">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="50*"/>
@@ -59,16 +65,19 @@
                 <Label x:Name="selectScript" Content="Label" HorizontalAlignment="Left" VerticalAlignment="Top"/>
                 <Label x:Name="selectScriptDebug" Content="Label" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,25,0,0"/>
                 <ListBox x:Name="listStack" Grid.Row="1"/>
-                <Label Content="上面是执行栈，下面是计算栈"  Grid.Row="2"/>
+                <Label Content="上面是计算栈，下面是临时栈"  Grid.Row="2"/>
 
                 <ListBox x:Name="listAltStack" Grid.Row="3"/>
 
             </Grid>
         </GroupBox>
         <GroupBox Header ="code" Margin="0" Grid.Row="1" Grid.RowSpan="2"
-                              FocusManager.IsFocusScope="True" Grid.Column="2">
+                              FocusManager.IsFocusScope="True" Grid.Column="3" Grid.ColumnSpan="2">
             <avalonedit:TextEditor x:Name="codeEdit"
                                        ShowLineNumbers="True"    SyntaxHighlighting="C#" FontSize="10pt" IsReadOnly="True" />
+        </GroupBox>
+        <GroupBox Header="特别关注,比如Log、Notify" Grid.Row="1" Grid.RowSpan="2" Grid.Column="5">
+            <ListBox></ListBox>
         </GroupBox>
     </Grid>
 </Page>

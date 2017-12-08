@@ -20,7 +20,7 @@ namespace Neo.VM
             dictionary[method] = handler;
         }
 
-        internal bool Invoke(string method, ExecutionEngine engine)
+        public virtual bool Invoke(string method, ExecutionEngine engine)
         {
             if (!dictionary.ContainsKey(method)) return false;
             return dictionary[method](engine);

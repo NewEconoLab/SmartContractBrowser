@@ -82,7 +82,7 @@ namespace Neo.Debug
             }
             else if (stackop.type == SmartContract.Debug.OpType.Peek)
             {
-                CalcStack.Peek(stackop.ind);
+                //CalcStack.Peek(stackop.ind);
             }
             else if (stackop.type == SmartContract.Debug.OpType.Remove)
             {
@@ -151,7 +151,7 @@ namespace Neo.Debug
                 {
                     if(op.op== VM.OpCode.SYSCALL)//syscall比较独特，有些syscall 可以产生独立的log
                     {
-                        runstate.DoSysCall(op.op);
+                        //runstate.DoSysCall(op.op);
                     }
                     if (runstate.CalcCalcStack(op.op) == false)
                     {
