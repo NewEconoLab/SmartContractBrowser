@@ -47,6 +47,7 @@ namespace SmartContractBrowser
                 }
 
                 InitTreeCode();
+                InitCareList();
             }
             //catch (Exception err)
             //{
@@ -78,8 +79,79 @@ namespace SmartContractBrowser
             item.IsSelected = true;
             item.BringIntoView();
         }
+        void InitCareList()
+        {
+            listCare.Items.Clear();
+            foreach (var c in debugtool.simvm.careinfo)
+            {
+                listCare.Items.Add(c);
+            }
+        }
+        void SetTreeDataItem(ItemCollection parent, Neo.SmartContract.Debug.StackItem item)
+        {
+            if (item == null)
+            {
+                TreeViewItem titem = new TreeViewItem();
+                titem.Header = "<null>";
+                parent.Add(titem);
+                return;
+            }
+            {//type
+                TreeViewItem titem = new TreeViewItem();
+                titem.Header = "deftype:" + item.type;
+                parent.Add(titem);
+            }
+            if (item.type != "Array" && item.type != "Struct")
+            {
+                {//value
+                    TreeViewItem vitem = new TreeViewItem();
+                    vitem.Header = "value:" + item.strvalue;
+                    parent.Add(vitem);
+                }
+                if (item.type == "ByteArray")//asstr
+                {
+                    var bt = Neo.Debug.DebugTool.HexString2Bytes(item.strvalue);
+                    {
+                        var asstr = System.Text.Encoding.UTF8.GetString(bt);
+                        TreeViewItem vitem = new TreeViewItem();
+                        vitem.Header = "asStr:" + asstr;
+                        parent.Add(vitem);
+                    }
+                    if (bt.Length <= 8)
+                    {
+                        System.Numerics.BigInteger num = new System.Numerics.BigInteger(bt);
+                        TreeViewItem vitem = new TreeViewItem();
+                        vitem.Header = "asNum:" + num.ToString();
+                        parent.Add(vitem);
+                    }
+                }
+            }
+            else
+            {
+                {//value
+                    TreeViewItem vitem = new TreeViewItem();
+                    vitem.Header = "subitems:" + item.subItems.Count;
+                    parent.Add(vitem);
+                    vitem.IsExpanded = true;
+                    for (var i = 0; i < item.subItems.Count; i++)
+                    {
+                        TreeViewItem sitem = new TreeViewItem();
+                        vitem.Items.Add(sitem);
+                        sitem.Header = "item(" + i + ")";
+                        sitem.IsExpanded = true;
 
+                        SetTreeDataItem(sitem.Items, item.subItems[i]);
+                    }
+                }
+            }
 
+        }
+        void SetTreeData(Neo.SmartContract.Debug.StackItem item)
+        {
+            treeData.Items.Clear();
+            SetTreeDataItem(treeData.Items, item);
+
+        }
         void FillTreeScript(TreeViewItem treeitem, Neo.SmartContract.Debug.LogScript script)
         {
             treeitem.Tag = script;
@@ -243,7 +315,21 @@ namespace SmartContractBrowser
 
         }
 
+        private void listStack_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            SetTreeData(listStack.SelectedItem as Neo.SmartContract.Debug.StackItem);
+        }
 
+        private void listAltStack_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            SetTreeData(listAltStack.SelectedItem as Neo.SmartContract.Debug.StackItem);
+        }
 
+        private void listCare_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var data = listCare.SelectedItem as Neo.Debug.CareItem;
+            SetTreeData(data.item);
+
+        }
     }
 }

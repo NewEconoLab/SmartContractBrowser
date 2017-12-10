@@ -88,7 +88,7 @@ namespace Neo.Debug
             {
                 CalcStack.Remove(stackop.ind);
             }
-            if(stackop.type!= SmartContract.Debug.OpType.Peek)//peek 不造成状态变化
+            if (stackop.type != SmartContract.Debug.OpType.Peek)//peek 不造成状态变化
                 StateID++;
         }
         public void DoSysCall()
@@ -114,6 +114,61 @@ namespace Neo.Debug
             return state;
         }
     }
+    public class CareItem
+    {
+        public CareItem(string name, State state)
+        {
+            this.name = name;
+            if(name== "Neo.Runtime.CheckWitness"||
+               name== "Neo.Runtime.Notify")
+            {
+                this.item = state.CalcStack.Peek(0).Clone();
+                //this.item = item.Conv2String();
+            }
+            else if(name== "Neo.Runtime.Log")
+            {
+                var item = state.CalcStack.Peek(0);
+                this.item = new SmartContract.Debug.StackItem();
+                this.item.type = "String";
+                if(item.type=="String")
+                {
+                    this.item.strvalue = item.strvalue;
+                }
+                else if(item.type=="ByteArray")
+                {
+                    var bt = Neo.Debug.DebugTool.HexString2Bytes(item.strvalue);
+                    this.item.strvalue = System.Text.Encoding.ASCII.GetString(bt);
+                }
+                else
+                {
+                    throw new Exception("can't conver this.");
+                }
+            }
+            else if(name== "Neo.Storage.Put")
+            {
+                var item1 = state.CalcStack.Peek(0);
+                var item2 = state.CalcStack.Peek(1);
+                var item3 = state.CalcStack.Peek(2);
+                this.item = new SmartContract.Debug.StackItem();
+                this.item.type = "Array";
+                this.item.subItems = new List<SmartContract.Debug.StackItem>();
+                this.item.subItems.Add(item1.Clone());
+                this.item.subItems.Add(item2.Clone());
+                this.item.subItems.Add(item3.Clone());
+            }
+            else
+            {
+
+            }
+           
+        }
+        public string name;
+        public Neo.SmartContract.Debug.StackItem item;
+        public override string ToString()
+        {
+            return name + "(" + item?.ToString() + ")";
+        }
+    }
     //模拟虚拟机
     public class SimVM
     {
@@ -124,10 +179,12 @@ namespace Neo.Debug
 
             stateClone = new Dictionary<int, State>();
             mapState = new Dictionary<SmartContract.Debug.LogOp, int>();
+            careinfo = new List<CareItem>();
             ExecuteScript(runstate, FullLog.script);
         }
         public Dictionary<int, State> stateClone;
         public Dictionary<SmartContract.Debug.LogOp, int> mapState;
+        public List<CareItem> careinfo;
         void ExecuteScript(State runstate, SmartContract.Debug.LogScript script)
         {
             runstate.PushExe(script.hash);
@@ -149,8 +206,10 @@ namespace Neo.Debug
                 }
                 else
                 {
-                    if(op.op== VM.OpCode.SYSCALL)//syscall比较独特，有些syscall 可以产生独立的log
+                    if (op.op == VM.OpCode.SYSCALL)//syscall比较独特，有些syscall 可以产生独立的log
                     {
+                        var name = System.Text.Encoding.ASCII.GetString(op.param);
+                        careinfo.Add(new CareItem(name, runstate));
                         //runstate.DoSysCall(op.op);
                     }
                     if (runstate.CalcCalcStack(op.op) == false)
