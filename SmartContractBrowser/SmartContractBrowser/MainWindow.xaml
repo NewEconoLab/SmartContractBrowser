@@ -6,16 +6,19 @@
         xmlns:local="clr-namespace:SmartContractBrowser"
             x:Class="SmartContractBrowser.MainWindow"
         mc:Ignorable="d"
-        Title="MainWindow" Height="874.703" Width="1540.674" >
+        Title="MainWindow" Height="437.703" Width="861.674" >
     <Grid>
         <TabControl >
-            <TabItem Header="智能合约编译">
+            <TabItem Header="智能合约编译(本地)">
                 <Frame Content="Frame" Source="/SmartContractBrowser;component/ContractCompiler.xaml">
-                    
+
                 </Frame>
             </TabItem>
-            <TabItem Header="交易调试器">
+            <TabItem Header="交易调试器(本地)">
                 <Frame Content="Frame" Margin="0" Source="/SmartContractBrowser;component/ContractDebug.xaml"/>
+            </TabItem>
+            <TabItem Header="UTXO查看(远程)"  >
+                <Frame Content="Frame" Source="/SmartContractBrowser;component/ShowUTXO.xaml"></Frame>
             </TabItem>
         </TabControl>
 
