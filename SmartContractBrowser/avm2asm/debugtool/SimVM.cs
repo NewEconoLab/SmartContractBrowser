@@ -105,7 +105,10 @@ namespace Neo.Debug
             }
             foreach (var s in CalcStack)
             {
-                state.CalcStack.Push(s.Clone());
+                if (s == null)
+                    state.CalcStack.Push(null);
+                else
+                    state.CalcStack.Push(s.Clone());
             }
             foreach (var s in AltStack)
             {
