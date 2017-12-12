@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SevenZip", "SevenZip\SevenZ
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "debug", "debug", "{530DA00D-4CC3-4640-ACE3-AC4B75CCF398}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeoThinSDK", "NeoThinSDK\NeoThinSDK.csproj", "{7F0974F3-C948-447F-A170-3133CDE4A1A7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -70,6 +72,12 @@ Global
 		{4960DD14-3431-47EC-B9D9-9D2730A98DC3}.Deploy|Any CPU.Build.0 = Deploy|Any CPU
 		{4960DD14-3431-47EC-B9D9-9D2730A98DC3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4960DD14-3431-47EC-B9D9-9D2730A98DC3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7F0974F3-C948-447F-A170-3133CDE4A1A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7F0974F3-C948-447F-A170-3133CDE4A1A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7F0974F3-C948-447F-A170-3133CDE4A1A7}.Deploy|Any CPU.ActiveCfg = Debug|Any CPU
+		{7F0974F3-C948-447F-A170-3133CDE4A1A7}.Deploy|Any CPU.Build.0 = Debug|Any CPU
+		{7F0974F3-C948-447F-A170-3133CDE4A1A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7F0974F3-C948-447F-A170-3133CDE4A1A7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
