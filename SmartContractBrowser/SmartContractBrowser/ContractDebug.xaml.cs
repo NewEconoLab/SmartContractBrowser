@@ -34,7 +34,7 @@ namespace SmartContractBrowser
             string pathLog = textLogPath.Text;
             string pathScript = textScriptDebug.Text;
             this.listLoadInfo.Items.Clear();
-            //try
+            try
             {
                 debugtool.Load(pathLog, pathScript, this.textTid.Text);
                 this.listLoadInfo.Items.Add("load finish");
@@ -49,11 +49,11 @@ namespace SmartContractBrowser
                 InitTreeCode();
                 InitCareList();
             }
-            //catch (Exception err)
-            //{
+            catch (Exception err)
+            {
 
-            //    this.listLoadInfo.Items.Add(err.Message);
-            //}
+                this.listLoadInfo.Items.Add(err.Message);
+            }
         }
         void InitTreeCode()
         {
