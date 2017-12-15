@@ -56,16 +56,29 @@ namespace Neo.Debug
                 StateID++;
                 return true;
             }
+            if (op == VM.OpCode.SWAP)
+            {
+                var v1 = CalcStack.Pop();
+                var v2 = CalcStack.Pop();
+                CalcStack.Push(v1);
+                CalcStack.Push(v2);
+                StateID++;
+                return true;
+            }
             return false;
         }
         public void CalcCalcStack(SmartContract.Debug.Op stackop, SmartContract.Debug.StackItem item)
         {
             if (stackop.type == SmartContract.Debug.OpType.Push)
             {
+                if (item == null)
+                    throw new Exception(stackop.type + "can not pass null");
                 CalcStack.Push(item);
             }
             else if (stackop.type == SmartContract.Debug.OpType.Insert)
             {
+                if (item == null)
+                    throw new Exception(stackop.type + "can not pass null");
                 CalcStack.Insert(stackop.ind, item);
             }
             else if (stackop.type == SmartContract.Debug.OpType.Clear)
@@ -74,6 +87,8 @@ namespace Neo.Debug
             }
             else if (stackop.type == SmartContract.Debug.OpType.Set)
             {
+                if (item == null)
+                    throw new Exception(stackop.type + "can not pass null");
                 CalcStack.Set(stackop.ind, item);
             }
             else if (stackop.type == SmartContract.Debug.OpType.Pop)
@@ -122,22 +137,22 @@ namespace Neo.Debug
         public CareItem(string name, State state)
         {
             this.name = name;
-            if(name== "Neo.Runtime.CheckWitness"||
-               name== "Neo.Runtime.Notify")
+            if (name == "Neo.Runtime.CheckWitness" ||
+               name == "Neo.Runtime.Notify")
             {
                 this.item = state.CalcStack.Peek(0).Clone();
                 //this.item = item.Conv2String();
             }
-            else if(name== "Neo.Runtime.Log")
+            else if (name == "Neo.Runtime.Log")
             {
                 var item = state.CalcStack.Peek(0);
                 this.item = new SmartContract.Debug.StackItem();
                 this.item.type = "String";
-                if(item.type=="String")
+                if (item.type == "String")
                 {
                     this.item.strvalue = item.strvalue;
                 }
-                else if(item.type=="ByteArray")
+                else if (item.type == "ByteArray")
                 {
                     var bt = Neo.Debug.DebugTool.HexString2Bytes(item.strvalue);
                     this.item.strvalue = System.Text.Encoding.ASCII.GetString(bt);
@@ -147,7 +162,7 @@ namespace Neo.Debug
                     throw new Exception("can't conver this.");
                 }
             }
-            else if(name== "Neo.Storage.Put")
+            else if (name == "Neo.Storage.Put")
             {
                 var item1 = state.CalcStack.Peek(0);
                 var item2 = state.CalcStack.Peek(1);
@@ -163,7 +178,7 @@ namespace Neo.Debug
             {
 
             }
-           
+
         }
         public string name;
         public Neo.SmartContract.Debug.StackItem item;
