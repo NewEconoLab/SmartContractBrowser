@@ -1,0 +1,37 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net46</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="sample_contract\Contract.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="sample_contract\Contract.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="sample_contract\sample_contract.csproj">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis" Version="2.4.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\neondebug\neondebug.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="sample_contract\mscorlib.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="sample_contract\Neo.SmartContract.Framework.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

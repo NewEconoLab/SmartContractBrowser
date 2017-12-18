@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net40</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="Neo.SmartContract.Framework">
+      <HintPath>Neo.SmartContract.Framework.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

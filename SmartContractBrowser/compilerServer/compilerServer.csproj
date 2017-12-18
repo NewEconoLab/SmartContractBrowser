@@ -2,10 +2,11 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFrameworks>net47;netcoreapp2.0</TargetFrameworks>
+    <TargetFrameworks>net47</TargetFrameworks>
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\compileService\compileService.csproj" />
     <ProjectReference Include="..\websocketSharp\websocketSharp.csproj" />
   </ItemGroup>
 
