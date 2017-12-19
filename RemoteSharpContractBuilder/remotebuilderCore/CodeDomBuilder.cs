@@ -38,14 +38,16 @@ namespace remotebuilderCore
             path = System.IO.Path.Combine(path, temppath);
             var bts = System.Text.Encoding.UTF8.GetBytes(src);
             var hashname = ToHexString(sha1.ComputeHash(bts));
-            var outpath = System.IO.Path.Combine(path, hashname + ".exe");
+            var outpath = System.IO.Path.Combine(path, hashname + ".dll");
             var outpathpdb = System.IO.Path.Combine(path, hashname + ".pdb");
 
             CompilerParameters option = new CompilerParameters();
-            option.GenerateExecutable = true;
+            option.GenerateExecutable = false;
             option.GenerateInMemory = false;
             option.IncludeDebugInformation = true;
+            
             option.ReferencedAssemblies.Add("Neo.SmartContract.Framework.dll");
+            option.ReferencedAssemblies.Add("System.Numerics.dll");
             option.OutputAssembly = System.IO.Path.Combine(path, outpath);
             var provider = CodeDomProvider.CreateProvider("c#");
             var br = provider.CompileAssemblyFromSource(option, src);
