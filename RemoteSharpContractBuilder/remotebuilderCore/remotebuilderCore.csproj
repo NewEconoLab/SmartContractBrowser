@@ -13,9 +13,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Include="mscorlib.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Neo.SmartContract.Framework.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\httplib2\httplib2.csproj" />
     <ProjectReference Include="..\neondebug\neondebug.csproj" />
-    <ProjectReference Include="..\roslynBuilder\roslynBuilder.csproj" />
   </ItemGroup>
 
 </Project>

@@ -19,7 +19,7 @@ namespace remotebuilderCore
             return help.ToString();
         }
 
-        roslynBuilder.RsolynBuilder builder = new roslynBuilder.RsolynBuilder();
+        CodeDomBuilder builder = new CodeDomBuilder();
 
         public class NeonResult : Neo.Compiler.ILogger
         {
@@ -208,10 +208,10 @@ namespace remotebuilderCore
             MyJson.JsonNode_Object item = new MyJson.JsonNode_Object();
 
             var src = System.Text.Encoding.UTF8.GetString(input.mapFiles["file"]);
-            roslynBuilder.buildResult result = null;
+            CodeDomBuilder.buildResult result = null;
             try
             {
-                result = await builder.buildSrc(src, "temp");
+                result = builder.buildSrc(src, "temp");
             }
             catch (Exception err)
             {
@@ -306,6 +306,9 @@ namespace remotebuilderCore
                     jsonitem.SetDictValue("col", err.col);
                     errors.Add(jsonitem);
                 }
+                Console.WriteLine("docomplile -3:");
+
+                return item.ToString();
             }
             Console.WriteLine("docomplile succ:");
 
