@@ -1,0 +1,28 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+</head>
+<body>
+
+
+    <img src="as.png" style="width:64px;height:64px" />
+    <h2>小蚁智能合约在线编译器</h2>
+    <span>服务器测试</span>
+    <span id="info"></span>
+    <hr />
+    <button id="change">->java</button>
+    <button id="doit">doit</button>
+    <div id="container" style="width:800px;height:600px;border:1px solid grey"></div>
+
+    <script src="min/vs/loader.js"></script>
+    <script src="app.js"></script>
+    <script>
+        require.config({ paths: { 'vs': 'min/vs' } });
+        require(['vs/editor/editor.main'], function () {
+
+        });
+    </script>
+</body>
+</html>

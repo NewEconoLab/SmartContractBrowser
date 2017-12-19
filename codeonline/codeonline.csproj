@@ -1,0 +1,144 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <ProjectGuid>{0F80A6A4-8ED4-4498-9B5A-0316E6CBBEBA}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <OutputPath>bin</OutputPath>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <DebugType>full</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+    <TypeScriptToolsVersion>2.3</TypeScriptToolsVersion>
+    <UseIISExpress>true</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
+  </PropertyGroup>
+  <ItemGroup>
+    <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="app.css" />
+    <Content Include="as.png" />
+    <Content Include="index.html" />
+    <Content Include="min\vs\base\worker\workerMain.js" />
+    <Content Include="min\vs\basic-languages\src\bat.js" />
+    <Content Include="min\vs\basic-languages\src\coffee.js" />
+    <Content Include="min\vs\basic-languages\src\cpp.js" />
+    <Content Include="min\vs\basic-languages\src\csharp.js" />
+    <Content Include="min\vs\basic-languages\src\css.js" />
+    <Content Include="min\vs\basic-languages\src\dockerfile.js" />
+    <Content Include="min\vs\basic-languages\src\fsharp.js" />
+    <Content Include="min\vs\basic-languages\src\go.js" />
+    <Content Include="min\vs\basic-languages\src\handlebars.js" />
+    <Content Include="min\vs\basic-languages\src\html.js" />
+    <Content Include="min\vs\basic-languages\src\ini.js" />
+    <Content Include="min\vs\basic-languages\src\jade.js" />
+    <Content Include="min\vs\basic-languages\src\java.js" />
+    <Content Include="min\vs\basic-languages\src\less.js" />
+    <Content Include="min\vs\basic-languages\src\lua.js" />
+    <Content Include="min\vs\basic-languages\src\markdown.js" />
+    <Content Include="min\vs\basic-languages\src\objective-c.js" />
+    <Content Include="min\vs\basic-languages\src\php.js" />
+    <Content Include="min\vs\basic-languages\src\postiats.js" />
+    <Content Include="min\vs\basic-languages\src\powershell.js" />
+    <Content Include="min\vs\basic-languages\src\python.js" />
+    <Content Include="min\vs\basic-languages\src\r.js" />
+    <Content Include="min\vs\basic-languages\src\razor.js" />
+    <Content Include="min\vs\basic-languages\src\ruby.js" />
+    <Content Include="min\vs\basic-languages\src\scss.js" />
+    <Content Include="min\vs\basic-languages\src\sql.js" />
+    <Content Include="min\vs\basic-languages\src\swift.js" />
+    <Content Include="min\vs\basic-languages\src\vb.js" />
+    <Content Include="min\vs\basic-languages\src\xml.js" />
+    <Content Include="min\vs\basic-languages\src\yaml.js" />
+    <Content Include="min\vs\editor\contrib\quickOpen\browser\symbol-sprite.svg" />
+    <Content Include="min\vs\editor\contrib\suggest\browser\String_16x.svg" />
+    <Content Include="min\vs\editor\contrib\suggest\browser\String_inverse_16x.svg" />
+    <Content Include="min\vs\editor\editor.main.css" />
+    <Content Include="min\vs\editor\editor.main.js" />
+    <Content Include="min\vs\editor\editor.main.nls.de.js" />
+    <Content Include="min\vs\editor\editor.main.nls.es.js" />
+    <Content Include="min\vs\editor\editor.main.nls.fr.js" />
+    <Content Include="min\vs\editor\editor.main.nls.it.js" />
+    <Content Include="min\vs\editor\editor.main.nls.ja.js" />
+    <Content Include="min\vs\editor\editor.main.nls.js" />
+    <Content Include="min\vs\editor\editor.main.nls.ko.js" />
+    <Content Include="min\vs\editor\editor.main.nls.ru.js" />
+    <Content Include="min\vs\editor\editor.main.nls.zh-cn.js" />
+    <Content Include="min\vs\editor\editor.main.nls.zh-tw.js" />
+    <Content Include="min\vs\language\css\cssMode.js" />
+    <Content Include="min\vs\language\css\cssWorker.js" />
+    <Content Include="min\vs\language\html\htmlMode.js" />
+    <Content Include="min\vs\language\html\htmlWorker.js" />
+    <Content Include="min\vs\language\json\jsonMode.js" />
+    <Content Include="min\vs\language\json\jsonWorker.js" />
+    <Content Include="min\vs\language\typescript\lib\typescriptServices.js" />
+    <Content Include="min\vs\language\typescript\src\mode.js" />
+    <Content Include="min\vs\language\typescript\src\worker.js" />
+    <Content Include="min\vs\loader.js" />
+    <Content Include="web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <TypeScriptCompile Include="app.ts" />
+    <TypeScriptCompile Include="monaco.d.ts" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="web.Debug.config">
+      <DependentUpon>web.config</DependentUpon>
+    </None>
+    <None Include="web.Release.config">
+      <DependentUpon>web.config</DependentUpon>
+    </None>
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">12.0</VisualStudioVersion>
+  </PropertyGroup>
+  <PropertyGroup>
+    <RootNamespace>codeonline</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\WebApplications\Microsoft.WebApplication.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\WebApplications\Microsoft.WebApplication.targets')" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>60934</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:60934/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <TypeScriptRemoveComments>False</TypeScriptRemoveComments>
+    <TypeScriptSourceMap>True</TypeScriptSourceMap>
+    <TypeScriptTarget>ES5</TypeScriptTarget>
+    <TypeScriptJSXEmit>None</TypeScriptJSXEmit>
+    <TypeScriptCompileOnSaveEnabled>True</TypeScriptCompileOnSaveEnabled>
+    <TypeScriptNoImplicitAny>False</TypeScriptNoImplicitAny>
+    <TypeScriptModuleKind>System</TypeScriptModuleKind>
+    <TypeScriptOutFile>app.js</TypeScriptOutFile>
+    <TypeScriptOutDir />
+    <TypeScriptGeneratesDeclarations>False</TypeScriptGeneratesDeclarations>
+    <TypeScriptNoEmitOnError>True</TypeScriptNoEmitOnError>
+    <TypeScriptMapRoot />
+    <TypeScriptSourceRoot />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <TypeScriptRemoveComments>true</TypeScriptRemoveComments>
+    <TypeScriptSourceMap>false</TypeScriptSourceMap>
+  </PropertyGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets')" />
+</Project>
