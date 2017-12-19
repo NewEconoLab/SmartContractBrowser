@@ -10,12 +10,13 @@ namespace remotebuilderCore
     class Compiler
     {
         public const string verstr = "1.0";
-        public async Task<MyJson.IJsonNode> onHelp(FormData input)
+        public const string outputpath = "output";
+        public async Task<string> onHelp(FormData input)
         {
             MyJson.JsonNode_Object help = new MyJson.JsonNode_Object();
             help.SetDictValue("tag", 0);
             help.SetDictValue("msg", "Neo C# Http Compiler by lights 😂 " + verstr);
-            return help;
+            return help.ToString();
         }
 
         roslynBuilder.RsolynBuilder builder = new roslynBuilder.RsolynBuilder();
@@ -31,18 +32,45 @@ namespace remotebuilderCore
             public byte[] avm;
             public string abi;
             public string map;
+            class LockObj
+            {
+
+            }
+            LockObj lockobj = new LockObj();
+            public void Save(string outpath, string srccode)
+            {
+                lock (lockobj)
+                {
+                    string path = System.IO.Path.GetDirectoryName(this.GetType().Assembly.Location);
+                    path = System.IO.Path.Combine(path, outpath);
+                    if (System.IO.Directory.Exists(path) == false)
+                        System.IO.Directory.CreateDirectory(path);
+                    System.IO.File.WriteAllBytes(System.IO.Path.Combine(path, hash + ".avm"), this.avm);
+                    System.IO.File.WriteAllText(System.IO.Path.Combine(path, hash + ".cs"), srccode);
+                    System.IO.File.WriteAllText(System.IO.Path.Combine(path, hash + ".map.json"), this.map);
+                    System.IO.File.WriteAllText(System.IO.Path.Combine(path, hash + ".abi.json"), this.abi);
+                }
+            }
         }
-        NeonResult BuildNeon(byte[] dll, byte[] pdb)
+        public static string ToHexString(IEnumerable<byte> value)
         {
-            NeonResult nr = new NeonResult();
+            StringBuilder sb = new StringBuilder();
+            foreach (byte b in value)
+                sb.AppendFormat("{0:x2}", b);
+            return sb.ToString();
+        }
+        void BuildNeon(byte[] dll, byte[] pdb, NeonResult result)
+        {
+            NeonResult nr = result;
             Neo.Compiler.MSIL.ModuleConverter convert = new Neo.Compiler.MSIL.ModuleConverter(nr);
             Neo.Compiler.MSIL.ILModule module = new Neo.Compiler.MSIL.ILModule();
             System.IO.MemoryStream ms = new System.IO.MemoryStream(dll);
             System.IO.MemoryStream mspdb = new System.IO.MemoryStream(pdb);
             module.LoadModule(ms, mspdb);
             var mod = convert.Convert(module);
-            nr.avm = mod.Build();
-            var abijson = vmtool.FuncExport.Export(mod, nr.avm);
+            var avm = mod.Build();
+            nr.avm = avm;
+            var abijson = vmtool.FuncExport.Export(mod, avm);
             nr.hash = abijson["hash"].AsString();
             nr.abi = abijson.ToString();
             {//gen debug info
@@ -69,7 +97,7 @@ namespace remotebuilderCore
                 }
                 nr.map = arr.ToString();
             }
-            return nr;
+
         }
         //public async Task<MyJson.IJsonNode> onJsonRPC(FormData input)
         //{
@@ -174,18 +202,83 @@ namespace remotebuilderCore
         //        return item;
         //    }
         //}
-        public async Task<MyJson.IJsonNode> onCompile(FormData input)
+        public async Task<string> onCompile(FormData input)
         {
+            Console.WriteLine("docomplile:" + DateTime.Now.ToLongTimeString());
             MyJson.JsonNode_Object item = new MyJson.JsonNode_Object();
 
             var src = System.Text.Encoding.UTF8.GetString(input.mapFiles["file"]);
-            roslynBuilder.buildResult result = await builder.buildSrc(src, "temp");
-
+            roslynBuilder.buildResult result = null;
+            try
+            {
+                result = await builder.buildSrc(src, "temp");
+            }
+            catch (Exception err)
+            {
+                item.SetDictValue("tag", -3);
+                item.SetDictValue("msg", "compile unknown error.");
+                MyJson.JsonNode_Array errors = new MyJson.JsonNode_Array();
+                item.SetDictValue("errors", errors);
+                var jsonitem = new MyJson.JsonNode_Object();
+                jsonitem.SetDictValue("tag", "error");
+                jsonitem.SetDictValue("msg", err.Message);
+                jsonitem.SetDictValue("id", err.HResult.ToString("X02"));
+                errors.Add(jsonitem);
+                Console.WriteLine("docomplile -3:");
+                return item.ToString();
+            }
             //编译成功
             if (result.dll != null && result.dll.Length > 0)
             {
-                var neonr = BuildNeon(result.dll, result.pdb);
-
+                NeonResult neonr = new NeonResult();
+                try
+                {
+                    BuildNeon(result.dll, result.pdb, neonr);
+                }
+                catch (Exception err)
+                {
+                    item.SetDictValue("tag", -2);
+                    item.SetDictValue("msg", "neon compile error.");
+                    MyJson.JsonNode_Array errors = new MyJson.JsonNode_Array();
+                    item.SetDictValue("errors", errors);
+                    var _jsonitem = new MyJson.JsonNode_Object();
+                    _jsonitem.SetDictValue("tag", "error");
+                    _jsonitem.SetDictValue("msg", err.Message);
+                    _jsonitem.SetDictValue("id", err.HResult.ToString("X02"));
+                    errors.Add(_jsonitem);
+                    foreach (var log in neonr.logs)
+                    {
+                        var jsonitem = new MyJson.JsonNode_Object();
+                        jsonitem.SetDictValue("tag", "log");
+                        jsonitem.SetDictValue("msg", log);
+                        jsonitem.SetDictValue("id", "0");
+                        errors.Add(jsonitem);
+                    }
+                    Console.WriteLine("docomplile -2:");
+                    return item.ToString();
+                }
+                try
+                {
+                    neonr.Save(outputpath, src);
+                    item.SetDictValue("tag", 0);
+                    item.SetDictValue("hash", neonr.hash);
+                    item.SetDictValue("hex", ToHexString(neonr.avm));
+                    item.SetDictValue("funcsigns", neonr.abi);
+                }
+                catch (Exception err)
+                {
+                    item.SetDictValue("tag", -1);
+                    item.SetDictValue("msg", "save error.");
+                    MyJson.JsonNode_Array errors = new MyJson.JsonNode_Array();
+                    item.SetDictValue("errors", errors);
+                    var jsonitem = new MyJson.JsonNode_Object();
+                    jsonitem.SetDictValue("tag", "error");
+                    jsonitem.SetDictValue("msg", err.Message);
+                    jsonitem.SetDictValue("id", err.HResult.ToString("X02"));
+                    errors.Add(jsonitem);
+                    Console.WriteLine("docomplile -1:");
+                    return item.ToString();
+                }
             }
             else
             {
@@ -214,9 +307,54 @@ namespace remotebuilderCore
                     errors.Add(jsonitem);
                 }
             }
-            return item;
+            Console.WriteLine("docomplile succ:");
+
+            return item.ToString();
         }
         //{"tag":0,"hex":"00C56B51616C7566","hash":"8CC00DB1FC4D513520D313DF1A600E4CE6CCA661A37833B5264726A8A449CD09","funcsigns":{"A::Main":{"name":"A::Main","returntype":"number","params":[]
         //{"tag":-3,"msg":"compile fail.","errors":[{"msg":"未能找到类型或命名空间名称“in3t”(是否缺少 using 指令或程序集引用?)","line":7,"col":19,"tag":"错误"}]}
+        public async Task<string> onGetfile(FormData input)
+        {
+            var hash = input.mapParams["hash"];
+            if (hash.IndexOf("0x") == -1)
+            {
+                hash = "0x" + hash;
+            }
+            MyJson.JsonNode_Object json = new MyJson.JsonNode_Object();
+            string path = System.IO.Path.GetDirectoryName(this.GetType().Assembly.Location);
+            path = System.IO.Path.Combine(path, outputpath);
+            if (System.IO.Directory.Exists(path) == false)
+                System.IO.Directory.CreateDirectory(path);
+
+            string pathAvm = System.IO.Path.Combine(path, hash + ".avm");
+            string pathCs = System.IO.Path.Combine(path, hash + ".cs");
+            string pathMap = System.IO.Path.Combine(path, hash + ".map.json");
+            string pathAbi = System.IO.Path.Combine(path, hash + ".abi.json");
+
+            if (System.IO.File.Exists(pathAvm))
+            {
+                var bts = System.IO.File.ReadAllBytes(pathAvm);
+                json.SetDictValue("avm", ToHexString(bts));
+            }
+            if (System.IO.File.Exists(pathCs))
+            {
+                var txt = System.IO.File.ReadAllText(pathCs);
+                txt = Uri.EscapeDataString(txt);
+                json.SetDictValue("cs", txt);
+            }
+            if (System.IO.File.Exists(pathMap))
+            {
+                var txt = System.IO.File.ReadAllText(pathMap);
+                txt = Uri.EscapeDataString(txt);
+                json.SetDictValue("map", txt);
+            }
+            if (System.IO.File.Exists(pathCs))
+            {
+                var txt = System.IO.File.ReadAllText(pathAbi);
+                txt = Uri.EscapeDataString(txt);
+                json.SetDictValue("abi", txt);
+            }
+            return json.ToString();
+        }
     }
 }

@@ -12,7 +12,7 @@ namespace remotebuilderCore
            
             server.AddParser("/_api/help", compiler.onHelp);
             server.AddParser("/_api/parse", compiler.onCompile);
-
+            server.AddParser("/_api/get", compiler.onGetfile);
             ShowWelcome();
 
             while (true)

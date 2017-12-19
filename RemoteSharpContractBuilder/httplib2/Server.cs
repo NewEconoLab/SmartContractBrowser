@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace httplib2
 {
-    public delegate Task<MyJson.IJsonNode> onHttp(FormData data);
+    public delegate Task<string> onHttp(FormData data);
     public class RpcServer
     {
         System.Collections.Concurrent.ConcurrentDictionary<string, onHttp> mapParser = new System.Collections.Concurrent.ConcurrentDictionary<string, onHttp>();
