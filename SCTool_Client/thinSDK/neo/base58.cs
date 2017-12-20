@@ -6,7 +6,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NEO.Cryptography.Cryptography
+namespace ThinNeo.Cryptography.Cryptography
 {
     public static class Base58
     {

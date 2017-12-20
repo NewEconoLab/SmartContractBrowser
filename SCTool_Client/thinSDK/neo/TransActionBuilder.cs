@@ -1,10 +1,10 @@
-﻿using NEO.Cryptography.Cryptography;
+﻿using ThinNeo.Cryptography.Cryptography;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace NeoThinSDK
+namespace ThinNeo
 {
     public enum TransactionType : byte
     {

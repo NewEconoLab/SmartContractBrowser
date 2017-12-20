@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Numerics;
 
-namespace NEO.Cryptography.Cryptography.ECC
+namespace ThinNeo.Cryptography.Cryptography.ECC
 {
     internal class ECFieldElement : IComparable<ECFieldElement>, IEquatable<ECFieldElement>
     {
@@ -48,7 +48,8 @@ namespace NEO.Cryptography.Cryptography.ECC
             int n = Helper.GetBitLength(k);// k.GetBitLength();
             int s = Helper.GetLowestSetBit(k);
 
-            Debug.Assert(Helper.TestBit(k,s));
+
+            System.Diagnostics.Debug.Assert(Helper.TestBit(k,s));
 
             BigInteger Uh = 1;
             BigInteger Vl = 2;
@@ -132,7 +133,7 @@ namespace NEO.Cryptography.Cryptography.ECC
                         V += curve.Q;
                     }
                     V >>= 1;
-                    Debug.Assert((V * V).Mod(curve.Q) == Value);
+                    System.Diagnostics.Debug.Assert((V * V).Mod(curve.Q) == Value);
                     return new ECFieldElement(V, curve);
                 }
             }

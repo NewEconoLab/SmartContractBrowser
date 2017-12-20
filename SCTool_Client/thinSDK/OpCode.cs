@@ -1,4 +1,4 @@
-﻿namespace Neo.VM
+﻿namespace ThinNeo.VM
 {
     public enum OpCode : byte
     {

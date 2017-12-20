@@ -1,11 +1,11 @@
-﻿using Neo.VM;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ThinNeo.VM;
 
-namespace Neo.Compiler
+namespace ThinNeo.Compiler
 {
     public enum ParamType
     {

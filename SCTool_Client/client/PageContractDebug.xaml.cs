@@ -27,7 +27,7 @@ namespace SmartContractBrowser
         {
             InitializeComponent();
         }
-        public Neo.Debug.DebugTool debugtool = new Neo.Debug.DebugTool();
+        public ThinNeo.Debug.DebugTool debugtool = new ThinNeo.Debug.DebugTool();
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
@@ -87,7 +87,7 @@ namespace SmartContractBrowser
                 listCare.Items.Add(c);
             }
         }
-        void SetTreeDataItem(ItemCollection parent, Neo.SmartContract.Debug.StackItem item)
+        void SetTreeDataItem(ItemCollection parent, ThinNeo.SmartContract.Debug.StackItem item)
         {
             if (item == null)
             {
@@ -110,7 +110,7 @@ namespace SmartContractBrowser
                 }
                 if (item.type == "ByteArray")//asstr
                 {
-                    var bt = Neo.Debug.DebugTool.HexString2Bytes(item.strvalue);
+                    var bt = ThinNeo.Debug.DebugTool.HexString2Bytes(item.strvalue);
                     {
                         var asstr = System.Text.Encoding.UTF8.GetString(bt);
                         TreeViewItem vitem = new TreeViewItem();
@@ -146,13 +146,13 @@ namespace SmartContractBrowser
             }
 
         }
-        void SetTreeData(Neo.SmartContract.Debug.StackItem item)
+        void SetTreeData(ThinNeo.SmartContract.Debug.StackItem item)
         {
             treeData.Items.Clear();
             SetTreeDataItem(treeData.Items, item);
 
         }
-        void FillTreeScript(TreeViewItem treeitem, Neo.SmartContract.Debug.LogScript script)
+        void FillTreeScript(TreeViewItem treeitem, ThinNeo.SmartContract.Debug.LogScript script)
         {
             treeitem.Tag = script;
             treeitem.Header = "script:" + script.hash;
@@ -161,7 +161,7 @@ namespace SmartContractBrowser
                 TreeViewItem itemop = new TreeViewItem();
 
                 itemop.Header = op.GetHeader();
-                if (op.op == Neo.VM.OpCode.SYSCALL && op.param != null)
+                if (op.op == ThinNeo.VM.OpCode.SYSCALL && op.param != null)
                 {
                     string p = System.Text.Encoding.ASCII.GetString(op.param);
                     itemop.Header = op.GetHeader() + " " + p;
@@ -179,16 +179,16 @@ namespace SmartContractBrowser
 
         private void treeCode_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
-            Neo.SmartContract.Debug.LogScript script = null;
-            Neo.SmartContract.Debug.LogOp logop = null;
+            ThinNeo.SmartContract.Debug.LogScript script = null;
+            ThinNeo.SmartContract.Debug.LogOp logop = null;
             if (treeCode.SelectedItem != null)
             {
                 var treenode = treeCode.SelectedItem as TreeViewItem;
                 var treenodep = treenode != null ? treenode.Parent as TreeViewItem : null;
-                script = treenode.Tag as Neo.SmartContract.Debug.LogScript;
-                logop = treenode.Tag as Neo.SmartContract.Debug.LogOp;
+                script = treenode.Tag as ThinNeo.SmartContract.Debug.LogScript;
+                logop = treenode.Tag as ThinNeo.SmartContract.Debug.LogOp;
                 if (script == null && treenodep != null)
-                    script = treenodep.Tag as Neo.SmartContract.Debug.LogScript;
+                    script = treenodep.Tag as ThinNeo.SmartContract.Debug.LogScript;
             }
             listStack.Items.Clear();
             listAltStack.Items.Clear();
@@ -238,7 +238,7 @@ namespace SmartContractBrowser
                     }
                     if (logop != null)
                     {
-                        foreach (Neo.Compiler.Op op in listBoxASM.Items)
+                        foreach (ThinNeo.Compiler.Op op in listBoxASM.Items)
                         {
                             if (op.addr == (ushort)logop.addr)
                             {
@@ -263,9 +263,9 @@ namespace SmartContractBrowser
 
         private void listBoxASM_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var op = this.listBoxASM.SelectedItem as Neo.Compiler.Op;
+            var op = this.listBoxASM.SelectedItem as ThinNeo.Compiler.Op;
             if (op == null) return;
-            var tag = this.listBoxASM.Tag as Neo.Debug.DebugScript;
+            var tag = this.listBoxASM.Tag as ThinNeo.Debug.DebugScript;
             if (tag == null) return;
             var line = tag.maps.GetLineBack(op.addr);
             if (line > 0)
@@ -317,17 +317,17 @@ namespace SmartContractBrowser
 
         private void listStack_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            SetTreeData(listStack.SelectedItem as Neo.SmartContract.Debug.StackItem);
+            SetTreeData(listStack.SelectedItem as ThinNeo.SmartContract.Debug.StackItem);
         }
 
         private void listAltStack_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            SetTreeData(listAltStack.SelectedItem as Neo.SmartContract.Debug.StackItem);
+            SetTreeData(listAltStack.SelectedItem as ThinNeo.SmartContract.Debug.StackItem);
         }
 
         private void listCare_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var data = listCare.SelectedItem as Neo.Debug.CareItem;
+            var data = listCare.SelectedItem as ThinNeo.Debug.CareItem;
             SetTreeData(data.item);
 
         }

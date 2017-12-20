@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Neo.Debug.Helper
+namespace ThinNeo.Debug.Helper
 {
 
     public class AddrMap

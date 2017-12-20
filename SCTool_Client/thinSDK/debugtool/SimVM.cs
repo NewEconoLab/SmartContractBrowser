@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Neo.Debug
+namespace ThinNeo.Debug
 {
     public class State
     {
@@ -17,9 +17,9 @@ namespace Neo.Debug
         {
             this.StateID = id;
         }
-        public Neo.VM.RandomAccessStack<string> ExeStack = new VM.RandomAccessStack<string>();
-        public Neo.VM.RandomAccessStack<Neo.SmartContract.Debug.StackItem> CalcStack = new VM.RandomAccessStack<SmartContract.Debug.StackItem>();
-        public Neo.VM.RandomAccessStack<Neo.SmartContract.Debug.StackItem> AltStack = new VM.RandomAccessStack<SmartContract.Debug.StackItem>();
+        public VM.RandomAccessStack<string> ExeStack = new VM.RandomAccessStack<string>();
+        public VM.RandomAccessStack<SmartContract.Debug.StackItem> CalcStack = new VM.RandomAccessStack<SmartContract.Debug.StackItem>();
+        public VM.RandomAccessStack<SmartContract.Debug.StackItem> AltStack = new VM.RandomAccessStack<SmartContract.Debug.StackItem>();
         public void PushExe(string hash)
         {
             ExeStack.Push(hash);
@@ -154,7 +154,7 @@ namespace Neo.Debug
                 }
                 else if (item.type == "ByteArray")
                 {
-                    var bt = Neo.Debug.DebugTool.HexString2Bytes(item.strvalue);
+                    var bt = Debug.DebugTool.HexString2Bytes(item.strvalue);
                     this.item.strvalue = System.Text.Encoding.ASCII.GetString(bt);
                 }
                 else
@@ -181,7 +181,7 @@ namespace Neo.Debug
 
         }
         public string name;
-        public Neo.SmartContract.Debug.StackItem item;
+        public SmartContract.Debug.StackItem item;
         public override string ToString()
         {
             return name + "(" + item?.ToString() + ")";
@@ -250,7 +250,7 @@ namespace Neo.Debug
                     }
                     if (stateClone.ContainsKey(runstate.StateID) == false)
                     {
-                        stateClone[runstate.StateID] = (Neo.Debug.State)runstate.Clone();
+                        stateClone[runstate.StateID] = (Debug.State)runstate.Clone();
                     }
                     mapState[op] = runstate.StateID;
                 }

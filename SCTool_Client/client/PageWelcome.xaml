@@ -5,7 +5,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:client"
       mc:Ignorable="d" 
-      d:DesignHeight="344.737" d:DesignWidth="978.947"
+      d:DesignHeight="600.737" d:DesignWidth="978.947"
       Title="PageWelcome">
 
     <Grid Background="#FFE5E5E5" >
@@ -14,15 +14,38 @@
             <ColumnDefinition Width="50*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="24*"/>
-            <RowDefinition Height="67*"/>
-            <RowDefinition Height="52*"/>
+            <RowDefinition Height="24"/>
+            <RowDefinition Height="80"/>
+            <RowDefinition Height="40"/>
             <RowDefinition Height="202*"/>
         </Grid.RowDefinitions>
         <Image Margin="0,0,489,0" Source="resources/neologo.png" Grid.RowSpan="1" Grid.Row="1" HorizontalAlignment="Right" Grid.ColumnSpan="2" Width="72"/>
         <Image Margin="0.5,0,0,0" Source="resources/nellogo.png" Grid.RowSpan="1" Grid.Row="1" HorizontalAlignment="Left" Grid.Column="1" Width="122"/>
         <TextBlock HorizontalAlignment="Center"  Grid.Row="2" TextWrapping="Wrap" Text="歡迎使用智能合約工具 Welcome" VerticalAlignment="Center" Grid.ColumnSpan="2" Height="32" Width="120" TextAlignment="Center"/>
-        <GroupBox Header="智能合約分析工具" Margin="3,0,0,0" Grid.Row="3"/>
+        <GroupBox Header="智能合約分析工具 Convert AVM->ASM Code" Margin="3,0,0,0" Grid.Row="3">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="24"/>
+                    <RowDefinition Height="24"/>
+                    <RowDefinition Height="271*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="91*"/>
+                    <ColumnDefinition Width="92*"/>
+                    <ColumnDefinition Width="150*"/>
+                    <ColumnDefinition Width="142*"/>
+                </Grid.ColumnDefinitions>
+                <TextBox x:Name="textAvm" Margin="0" Grid.Row="2" TextWrapping="Wrap" Text="00" Grid.ColumnSpan="2" TextChanged="textAvm_TextChanged" />
+                <Button Content="FromFile" Margin="0" Grid.Row="1" Click="Button_Click"/>
+                <Button Content="FromNelSrc" Margin="0" Grid.Row="1" Grid.Column="1"/>
+
+                <ListBox x:Name="listASM" Grid.Column="2" Margin="0" Grid.Row="2"/>
+                <ListBox x:Name="listSysCall" Grid.Column="3" Margin="0" Grid.Row="2"/>
+                <Label Content="Copy AVM 2 Here" Margin="0" Grid.ColumnSpan="2" Grid.RowSpan="1"/>
+                <Label Content="NEO.ASM" Margin="0" Grid.Column="2" Grid.RowSpan="2" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                <Label Content="Syscall in contract" Margin="0" Grid.RowSpan="2" Grid.Column="3" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+            </Grid>
+        </GroupBox>
 
     </Grid>
 </Page>

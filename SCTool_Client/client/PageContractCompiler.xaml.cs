@@ -65,7 +65,7 @@ namespace SmartContractBrowser
             }
         }
         Result buildResult = null;
-        Neo.Debug.Helper.AddrMap debugInfo = null;
+        ThinNeo.Debug.Helper.AddrMap debugInfo = null;
         private void Button_Click(object sender, RoutedEventArgs e)
         {
           
@@ -74,7 +74,7 @@ namespace SmartContractBrowser
         {
             var sha256 = System.Security.Cryptography.SHA256.Create();
             byte[] hash256 = sha256.ComputeHash(script);
-            var ripemd160 = new NEO.Cryptography.Cryptography.RIPEMD160Managed();
+            var ripemd160 = new ThinNeo.Cryptography.Cryptography.RIPEMD160Managed();
             var hash = ripemd160.ComputeHash(hash256);
             StringBuilder sb = new StringBuilder();
             sb.Append("0x");
@@ -106,7 +106,7 @@ namespace SmartContractBrowser
                   var addr = this.debugInfo.GetAddrBack(line);
                   if (addr >= 0)
                   {
-                      foreach (Neo.Compiler.Op item in this.listASM.Items)
+                      foreach (ThinNeo.Compiler.Op item in this.listASM.Items)
                       {
                           if (item != null && item.addr == addr)
                           {
@@ -140,7 +140,7 @@ namespace SmartContractBrowser
 
         private void listASM_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var op = this.listASM.SelectedItem as Neo.Compiler.Op;
+            var op = this.listASM.SelectedItem as ThinNeo.Compiler.Op;
             if (op == null) return;
             var line = this.debugInfo.GetLineBack(op.addr);
             textAsm.Text = "srcline=" + line;

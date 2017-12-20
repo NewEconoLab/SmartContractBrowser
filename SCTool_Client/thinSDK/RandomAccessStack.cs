@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Neo.VM
+namespace ThinNeo.VM
 {
     public class RandomAccessStack<T> : IReadOnlyCollection<T>
     {

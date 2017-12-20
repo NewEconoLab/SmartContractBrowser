@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Numerics;
+using ThinNeo.Cryptography.Cryptography;
 
-using NEO.Cryptography.Cryptography;
-
-namespace NEO.Cryptography.Cryptography
+namespace ThinNeo
 {
     public static class Helper
     {
@@ -41,12 +40,12 @@ namespace NEO.Cryptography.Cryptography
 
         public static byte[] GetPublicKeyFromPrivateKey(byte[] privateKey)
         {
-            var PublicKey = NEO.Cryptography.Cryptography.ECC.ECCurve.Secp256r1.G * privateKey;
+            var PublicKey = ThinNeo.Cryptography.Cryptography.ECC.ECCurve.Secp256r1.G * privateKey;
             return PublicKey.EncodePoint(true);
         }
         public static byte[] GetPublicKeyFromPrivateKey_NoComp(byte[] privateKey)
         {
-            var PublicKey = NEO.Cryptography.Cryptography.ECC.ECCurve.Secp256r1.G * privateKey;
+            var PublicKey = ThinNeo.Cryptography.Cryptography.ECC.ECCurve.Secp256r1.G * privateKey;
             return PublicKey.EncodePoint(false);//.Skip(1).ToArray();
         }
         public static byte[] GetScriptFromPublicKey(byte[] publicKey)
@@ -203,9 +202,9 @@ namespace NEO.Cryptography.Cryptography
 
         public static byte[] Sign(byte[] message, byte[] prikey)
         {
-            var Secp256r1_G = NEO.Cryptography.Cryptography.Helper.HexString2Bytes("04" + "6B17D1F2E12C4247F8BCE6E563A440F277037D812DEB33A0F4A13945D898C296" + "4FE342E2FE1A7F9B8EE7EB4A7C0F9E162BCE33576B315ECECBB6406837BF51F5");
+            var Secp256r1_G = Helper.HexString2Bytes("04" + "6B17D1F2E12C4247F8BCE6E563A440F277037D812DEB33A0F4A13945D898C296" + "4FE342E2FE1A7F9B8EE7EB4A7C0F9E162BCE33576B315ECECBB6406837BF51F5");
 
-            var PublicKey = NEO.Cryptography.Cryptography.ECC.ECCurve.Secp256r1.G * prikey;
+            var PublicKey = ThinNeo.Cryptography.Cryptography.ECC.ECCurve.Secp256r1.G * prikey;
             var pubkey = PublicKey.EncodePoint(false).Skip(1).ToArray();
             //#if NET461
             const int ECDSA_PRIVATE_P256_MAGIC = 0x32534345;

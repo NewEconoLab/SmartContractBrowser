@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Neo.SmartContract.Debug
+namespace ThinNeo.SmartContract.Debug
 {
     [Flags]
     public enum VMState : byte
@@ -327,7 +327,7 @@ namespace Neo.SmartContract.Debug
             }
             if(json.ContainsKey("param"))
             {
-                _op.param = Neo.Debug.DebugTool.HexString2Bytes(json["param"].AsString());
+                _op.param = ThinNeo.Debug.DebugTool.HexString2Bytes(json["param"].AsString());
             }
             if (json.ContainsKey("result"))
             {

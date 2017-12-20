@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Numerics;
 
-namespace NEO.Cryptography.Cryptography.ECC
+namespace ThinNeo.Cryptography.Cryptography.ECC
 {
     public class ECPoint : IComparable<ECPoint>, IEquatable<ECPoint>
     {
@@ -431,7 +431,7 @@ namespace NEO.Cryptography.Cryptography.ECC
             {
                 if (x.Y.Equals(y.Y))
                     return x.Twice();
-                Debug.Assert(x.Y.Equals(-y.Y));
+                System.Diagnostics.Debug.Assert(x.Y.Equals(-y.Y));
                 return x.Curve.Infinity;
             }
             ECFieldElement gamma = (y.Y - x.Y) / (y.X - x.X);
