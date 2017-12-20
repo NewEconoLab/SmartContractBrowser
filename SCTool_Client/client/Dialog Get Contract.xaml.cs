@@ -30,15 +30,7 @@ namespace client
             this.DialogResult = true;
 
         }
-        class MyWC : System.Net.WebClient
-        {
-            protected override WebRequest GetWebRequest(Uri address)
-            {
-                var req = base.GetWebRequest(address);
-                req.Timeout = 2500;
-                return req;
-            }
-        }
+
         System.Net.WebClient wc = new MyWC();
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {

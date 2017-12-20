@@ -112,6 +112,8 @@ namespace ThinNeo
         }
         public static byte[] HexString2Bytes(string str)
         {
+            if (str.IndexOf("0x") == 0)
+                str = str.Substring(2);
             byte[] outd = new byte[str.Length / 2];
             for (var i = 0; i < str.Length / 2; i++)
             {

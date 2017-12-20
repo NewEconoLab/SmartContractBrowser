@@ -1,10 +1,10 @@
-﻿<Page x:Class="SmartContractBrowser.ContractDebug"
+﻿<Page x:Class="client.ContractDebug"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
             xmlns:avalonedit="http://icsharpcode.net/sharpdevelop/avalonedit" 
-      xmlns:local="clr-namespace:SmartContractBrowser"
+      xmlns:local="clr-namespace:client"
       mc:Ignorable="d" 
       d:DesignHeight="600.957" d:DesignWidth="726.087"
       Title="ContractDebug" Loaded="Page_Loaded">

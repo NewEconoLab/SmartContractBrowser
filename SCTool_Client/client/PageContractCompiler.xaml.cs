@@ -3,6 +3,7 @@ using ICSharpCode.AvalonEdit.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -15,7 +16,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace SmartContractBrowser
+namespace client
 {
     /// <summary>
     /// ContractCompiler.xaml 的交互逻辑
@@ -26,7 +27,16 @@ namespace SmartContractBrowser
         {
             InitializeComponent();
         }
+        System.Net.WebClient wc = new client.MyWC();
 
+        public void ClearLog()
+        {
+            Action safelog = () =>
+            {
+                this.listDebug.Items.Clear();
+            };
+            this.Dispatcher.Invoke(safelog);
+        }
         public void Log(string log)
         {
             Action<string> safelog = (_log) =>
@@ -67,8 +77,17 @@ namespace SmartContractBrowser
         Result buildResult = null;
         ThinNeo.Debug.Helper.AddrMap debugInfo = null;
         private void Button_Click(object sender, RoutedEventArgs e)
-        {
-          
+        {//testApi
+            var apitext = textAPI.Text;
+            try
+            {
+                var str = wc.DownloadString(apitext + "help");
+                MessageBox.Show("api ok:" + str);
+            }
+            catch (Exception err)
+            {
+                MessageBox.Show("api fail:" + err.Message, "", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
         public static string CalcScriptHashString(byte[] script)
         {
@@ -121,23 +140,106 @@ namespace SmartContractBrowser
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {//save button
-            var filename = this.buildResult.script_hash;
-            var targetpath = textTargetScriptPath.Text;
-            if (System.IO.Directory.Exists(targetpath) == false)
-                System.IO.Directory.CreateDirectory(targetpath);
 
-            var targetSrcFile = System.IO.Path.Combine(targetpath, filename + ".cs");
-            var targetAvmFile = System.IO.Path.Combine(targetpath, filename + ".avm");
-            var targetDebugFile = System.IO.Path.Combine(targetpath, filename + ".debug.json");
-            System.IO.File.Delete(targetSrcFile);
-            System.IO.File.Delete(targetAvmFile);
-            System.IO.File.Delete(targetDebugFile);
+            //save file
+            var code = codeEdit.Text;
+            byte[] bs = System.Text.Encoding.UTF8.GetBytes(code);
+            SHA1 sha1 = SHA1.Create();
+            var hash = sha1.ComputeHash(bs);
+            var hashstr = ThinNeo.Helper.Bytes2HexString(hash);
+            var path = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(this.GetType().Assembly.Location), "temp");
+            if (System.IO.Directory.Exists(path) == false)
+                System.IO.Directory.CreateDirectory(path);
 
-            System.IO.File.Copy(this.buildResult.srcfile, targetSrcFile);
-            System.IO.File.WriteAllBytes(targetAvmFile, this.buildResult.avm);
-            System.IO.File.WriteAllText(targetDebugFile, this.buildResult.debuginfo);
+            var filename = System.IO.Path.Combine(path, hashstr + ".cs");
+            System.IO.File.WriteAllBytes(filename, bs);
+
+
+            //call api upload file
+            var apitext = textAPI.Text;
+            var url = apitext + "parse?language=csharp";
+
+
+            byte[] retvar = wc.UploadFile(url, filename);
+            var strback = System.Text.Encoding.UTF8.GetString(retvar);
+            ClearLog();
+            this.textHash.Text = "";
+            this.textHexScript.Text = "";
+            var compilereuslt = MyJson.Parse(strback).AsDict();
+            if (compilereuslt.ContainsKey("tag"))
+            {
+                var tag = compilereuslt["tag"].AsInt();
+                if (tag == 0)
+                {
+                    this.Log("build ok.");
+                    var rhash = compilereuslt["hash"].AsString();
+                    var rhex = compilereuslt["hex"].AsString();
+                    var rabi = Uri.UnescapeDataString(compilereuslt["funcsigns"].AsString());
+                    this.textHash.Text = rhash;
+                    this.textHexScript.Text = rhex;
+                    updateASM(rhex);
+                }
+                else
+                {
+                    this.Log("build error:" + tag);
+                    try
+                    {
+                        var msg = compilereuslt["msg"].AsString();
+                        this.Log(msg);
+                    }
+                    catch
+                    {
+                    }
+                    try
+                    {
+                        var error = compilereuslt["errors"].AsList();
+                        foreach (MyJson.JsonNode_Object ee in error)
+                        {
+                            var _tag = ee.ContainsKey("tag") ? ee["tag"].AsString() : "";
+                            var _id = ee.ContainsKey("id") ? ee["id"].AsString() : "";
+                            var _msg = ee.ContainsKey("msg") ? ee["msg"].AsString() : "";
+                            var _line = ee.ContainsKey("line") ? ee["line"].AsInt() : -1;
+                            var _col = ee.ContainsKey("col") ? ee["col"].AsInt() : -1;
+                            string line = _id + ":" + _tag + " " + _msg + "(" + _line + "," + _col + ")";
+                            Log(line);
+                        }
+                    }
+                    catch
+                    {
+
+                    }
+                }
+            }
+
         }
+        void updateASM(string hex)
+        {
+            listASM.Items.Clear();
+            //build asm
+            ThinNeo.Compiler.Op[] ops = null;
+            try
+            {
+                var data = ThinNeo.Helper.HexString2Bytes(hex);
+                ops = ThinNeo.Compiler.Avm2Asm.Trans(data);
+                foreach (var op in ops)
+                {
+                    var str = "";
+                    try
+                    {
+                        str = op.ToString();
+                    }
+                    catch
+                    {
+                        str = "op fail:";
+                    }
+                    listASM.Items.Add(str);
+                }
+            }
+            catch (Exception err)
+            {
+            }
 
+        }
         private void listASM_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var op = this.listASM.SelectedItem as ThinNeo.Compiler.Op;
