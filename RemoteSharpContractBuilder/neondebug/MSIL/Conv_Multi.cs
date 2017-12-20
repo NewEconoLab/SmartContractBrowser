@@ -207,33 +207,6 @@ namespace Neo.Compiler.MSIL
 
 
         }
-        public bool IsEntryCall(Mono.Cecil.MethodDefinition defs, out byte id)
-        {
-            if (defs == null)
-            {
-                id = 0;
-                return false;
-            }
-            foreach (var attr in defs.CustomAttributes)
-            {
-                if (attr.AttributeType.Name == "EntryPointAttribute")
-                {
-                    var type = attr.ConstructorArguments[0].Type;
-                    var value = (byte)attr.ConstructorArguments[0].Value;
-
-                    //dosth
-                    id = value;
-                    return true;
-
-
-
-                }
-                //if(attr.t)
-            }
-            id = 0;
-            return false;
-
-        }
         public bool IsAppCall(Mono.Cecil.MethodDefinition defs, out byte[] hash)
         {
             if (defs == null)
@@ -310,7 +283,7 @@ namespace Neo.Compiler.MSIL
                 {
                     return true;
                 }
-                if(attr.AttributeType.Name== "NonemitWithConvertAttribute")
+                if (attr.AttributeType.Name == "NonemitWithConvertAttribute")
                 {
                     throw new Exception("NonemitWithConvert func only used for readonly static field.");
                 }
@@ -874,29 +847,77 @@ namespace Neo.Compiler.MSIL
                     var skip = 0;
                     int start = n;
                     System.Collections.Generic.Stack<int> stack = new System.Collections.Generic.Stack<int>();
-                    //有时c#也会用填数值的方式初始化，对于byte这会出错
-                    while (true)
+                    var _code = method.body_Codes[start];
+                    if (_code.code == CodeEx.Dup)//生成的setlem代码用dup
                     {
-                        int start2 = method.GetNextCodeAddr(start);
-                        int start3 = method.GetNextCodeAddr(start2);
-                        int start4 = method.GetNextCodeAddr(start3);
-                        if (start < 0 || start2 < 0 || start3 < 0 || start4 < 0)
-                            break;
-                        var _code = method.body_Codes[start];
-                        var _code2 = method.body_Codes[start2];
-                        var _code3 = method.body_Codes[start3];
-                        var _code4 = method.body_Codes[start4];
-                        if (_code.code != CodeEx.Dup || (_code4.code != CodeEx.Stelem_I1 && _code4.code != CodeEx.Stelem_I))
+                        while (true)
                         {
-                            break;
-                        }
-                        var pos = _code2.tokenI32;
-                        var value = _code3.tokenI32;
-                        outbyte[pos] = (byte)value;
+                            int start2 = method.GetNextCodeAddr(start);
+                            int start3 = method.GetNextCodeAddr(start2);
+                            int start4 = method.GetNextCodeAddr(start3);
+                            if (start < 0 || start2 < 0 || start3 < 0 || start4 < 0)
+                                break;
 
-                        skip += 4;
-                        start = method.GetNextCodeAddr(start4);
+                            _code = method.body_Codes[start];
+                            var _code2 = method.body_Codes[start2];
+                            var _code3 = method.body_Codes[start3];
+                            var _code4 = method.body_Codes[start4];
+                            if (_code.code != CodeEx.Dup || (_code4.code != CodeEx.Stelem_I1 && _code4.code != CodeEx.Stelem_I))
+                            {
+                                break;
+                            }
+                            else
+                            {
+                                var pos = _code2.tokenI32;
+                                var value = _code3.tokenI32;
+                                outbyte[pos] = (byte)value;
+
+                                skip += 4;
+                                start = method.GetNextCodeAddr(start4);
+                            }
+                        }
                     }
+                    else if ((_code.code == CodeEx.Stloc || _code.code == CodeEx.Stloc_0 || _code.code == CodeEx.Stloc_1 || _code.code == CodeEx.Stloc_2 || _code.code == CodeEx.Stloc_3 || _code.code == CodeEx.Stloc_S))
+                    {
+                        skip++;
+                        start = method.GetNextCodeAddr(start);
+                        _code = method.body_Codes[start];
+                        while (true)
+                        {
+                            int start2 = method.GetNextCodeAddr(start);
+                            int start3 = method.GetNextCodeAddr(start2);
+                            int start4 = method.GetNextCodeAddr(start3);
+                            if (start < 0 || start2 < 0 || start3 < 0 || start4 < 0)
+                                break;
+                            _code = method.body_Codes[start];
+                            var _code2 = method.body_Codes[start2];
+                            var _code3 = method.body_Codes[start3];
+                            var _code4 = method.body_Codes[start4];
+                            bool bLdLoc = (_code.code == CodeEx.Ldloc || _code.code == CodeEx.Ldloc_0 || _code.code == CodeEx.Ldloc_1 || _code.code == CodeEx.Ldloc_2 || _code.code == CodeEx.Ldloc_3 || _code.code == CodeEx.Ldloc_S);
+                            bool bStelem = (_code4.code == CodeEx.Stelem_I1 || _code4.code == CodeEx.Stelem_I);
+                            if(bLdLoc&&bStelem)
+                            {
+                                var pos = _code2.tokenI32;
+                                var value = _code3.tokenI32;
+                                outbyte[pos] = (byte)value;
+
+                                skip += 4;
+                                start = method.GetNextCodeAddr(start4);
+                            }
+                            else if(bLdLoc&&!bStelem)
+                            {
+                                skip++;
+                                break;
+                            }
+                            else
+                            {
+                                break;
+                            }
+
+                        }
+                    }
+                    //有时c#也会用填数值的方式初始化，对于byte这会出错
+
                     this._ConvertPush(outbyte, src, to);
                     return skip;
                 }

@@ -6,7 +6,7 @@
             xmlns:avalonedit="http://icsharpcode.net/sharpdevelop/avalonedit" 
       xmlns:local="clr-namespace:client"
       mc:Ignorable="d" 
-      d:DesignHeight="600.957" d:DesignWidth="726.087"
+      d:DesignHeight="781.449" d:DesignWidth="1384.691"
       Title="ContractDebug" Loaded="Page_Loaded">
 
     <Grid Background="#FFE5E5E5" FocusManager.IsFocusScope="True">
@@ -23,32 +23,44 @@
             <ColumnDefinition Width="115*"/>
             <ColumnDefinition Width="159*"/>
         </Grid.ColumnDefinitions>
-        <GroupBox Header="数值查看工具" Grid.Column="2" Grid.ColumnSpan="2">
+        <GroupBox Header="Value tool" Grid.Column="2" Grid.ColumnSpan="2">
             <TreeView x:Name="treeData"></TreeView>
         </GroupBox>
-        <GroupBox Header="调试数据源" Margin="0" Grid.Column="4" Grid.ColumnSpan="2">
+        <GroupBox Header="API" Margin="0" Grid.Column="4" Grid.ColumnSpan="2">
             <Grid>
-                <Label Content="此处使用文件夹作为数据源，正式环境将使用服务器数据源" HorizontalAlignment="Left" Margin="4,5,0,0" VerticalAlignment="Top"/>
-                <TextBox x:Name="textLogPath" HorizontalAlignment="Left" Height="23" Margin="172,30,0,0" TextWrapping="Wrap" Text="D:\Neo\FullLogs" VerticalAlignment="Top" Width="182"/>
-                <TextBlock HorizontalAlignment="Left" Margin="10,36,0,0" TextWrapping="Wrap" Text="智能合约交易调试日志路径" VerticalAlignment="Top"/>
-                <TextBlock HorizontalAlignment="Left" Margin="10,63,0,0" TextWrapping="Wrap" Text="智能合约编译输出路径" VerticalAlignment="Top"/>
-                <TextBox x:Name="textScriptDebug" HorizontalAlignment="Left" Height="23" Margin="172,58,0,0" TextWrapping="Wrap" Text="D:\Neo\ScriptDebug" VerticalAlignment="Top" Width="182"/>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="155*"/>
+                    <ColumnDefinition Width="356*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="47*"/>
+                </Grid.RowDefinitions>
+                <Label Content="download contract API" Margin="0" Grid.RowSpan="1" Grid.ColumnSpan="2"/>
+                <TextBox x:Name="textAPI" Margin="0" TextWrapping="Wrap" Text="http://118.31.39.242:81/_api/" Grid.Column="1" VerticalAlignment="Center" Height="24" Grid.RowSpan="2" />
+                <Button Content="TestAPI" Margin="10" Grid.Row="1" Click="Button_Click_1"/>
+                <Label Content="transaction log API" Margin="0" Grid.Row="2" Grid.RowSpan="1" Grid.ColumnSpan="2"/>
+                <TextBox x:Name="textAPITran" Margin="0,0,2,0" Grid.Row="2" TextWrapping="Wrap" Text="http://118.31.39.242:20332/" Grid.Column="1" VerticalAlignment="Center" Height="24" Grid.RowSpan="2" />
+                <Button Content="TestAPI" Margin="10" Grid.Row="3" Click="Button_Click_2"/>
             </Grid>
         </GroupBox>
-        <GroupBox Header="调试交易" Margin="0" Grid.RowSpan="1" Grid.ColumnSpan="2">
+        <GroupBox Header="调试交易 Debug TransAction" Margin="0" Grid.RowSpan="1" Grid.ColumnSpan="2">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="85"/>
                     <RowDefinition Height="99*"/>
                 </Grid.RowDefinitions>
-                <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="交易ID" VerticalAlignment="Top"/>
-                <TextBox x:Name="textTid" HorizontalAlignment="Left" Height="39" Margin="10,20,0,0" TextWrapping="Wrap" Text="0xfc84ab554efb7b2e1e18eb5cdb63d2220bc10eac336ff6957af4775b2c8cb5ac" VerticalAlignment="Top" Width="282"/>
-                <Button Content="加载交易" HorizontalAlignment="Left" Margin="10,64,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click" Grid.RowSpan="2"/>
+                <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="交易ID TXID" VerticalAlignment="Top"/>
+                <TextBox x:Name="textTid" Height="39" Margin="10,20,0,0" TextWrapping="Wrap" Text="0xfc84ab554efb7b2e1e18eb5cdb63d2220bc10eac336ff6957af4775b2c8cb5ac" VerticalAlignment="Top" Width="460"/>
+                <Button Content="Load" HorizontalAlignment="Left" Margin="10,64,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click" Grid.RowSpan="2"/>
                 <ListBox x:Name="listLoadInfo" Margin="0,0,1,0" Grid.Row="1"/>
 
             </Grid>
         </GroupBox>
-        <GroupBox Header="执行顺序" Margin="0" Grid.Row="1" Grid.ColumnSpan="1" Grid.RowSpan="2">
+        <GroupBox Header="执行顺序 AVM Run Order" Margin="0" Grid.Row="1" Grid.ColumnSpan="1" Grid.RowSpan="2">
             <TreeView x:Name="treeCode" SelectedItemChanged="treeCode_SelectedItemChanged"  FocusManager.IsFocusScope="True"/>
         </GroupBox>
         <GroupBox Grid.Column="1" Header="AVM ASM" Margin="0" Grid.Row="2" Grid.RowSpan="1" Grid.ColumnSpan="2">
@@ -57,15 +69,15 @@
         <GroupBox Grid.Column="1" Header="Info"  Grid.Row="1" Grid.ColumnSpan="2">
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="50*"/>
-                    <RowDefinition Height="58*"/>
-                    <RowDefinition Height="16*"/>
-                    <RowDefinition Height="45*"/>
+                    <RowDefinition Height="55*"/>
+                    <RowDefinition Height="84*"/>
+                    <RowDefinition Height="27*"/>
+                    <RowDefinition Height="60*"/>
                 </Grid.RowDefinitions>
-                <Label x:Name="selectScript" Content="Label" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-                <Label x:Name="selectScriptDebug" Content="Label" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,25,0,0"/>
+                <Label x:Name="selectScript" Content="Label" HorizontalAlignment="Left" VerticalAlignment="Top" Height="25" Width="40"/>
+                <Label x:Name="selectScriptDebug" Content="Label" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,25,0,0" Height="25" Width="40"/>
                 <ListBox x:Name="listStack" Grid.Row="1" SelectionChanged="listStack_SelectionChanged"/>
-                <Label Content="上面是计算栈，下面是临时栈"  Grid.Row="2"/>
+                <Label Content="calcstack up,altstack down"  Grid.Row="2"/>
 
                 <ListBox x:Name="listAltStack" Grid.Row="3" SelectionChanged="listAltStack_SelectionChanged"/>
 
@@ -76,7 +88,7 @@
             <avalonedit:TextEditor x:Name="codeEdit"
                                        ShowLineNumbers="True"    SyntaxHighlighting="C#" FontSize="10pt" IsReadOnly="True" />
         </GroupBox>
-        <GroupBox Header="特别关注,比如Log、Notify" Grid.Row="1" Grid.RowSpan="2" Grid.Column="5">
+        <GroupBox Header="CareInfo" Grid.Row="1" Grid.RowSpan="2" Grid.Column="5">
             <ListBox x:Name="listCare" SelectionChanged="listCare_SelectionChanged"></ListBox>
         </GroupBox>
     </Grid>

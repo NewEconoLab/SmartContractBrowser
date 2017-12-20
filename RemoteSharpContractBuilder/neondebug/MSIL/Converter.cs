@@ -119,7 +119,6 @@ namespace Neo.Compiler.MSIL
                 }
             }
 
-            Dictionary<byte, string> spmains = new Dictionary<byte, string>();
 
             foreach (var t in _in.mapType)
             {
@@ -140,16 +139,27 @@ namespace Neo.Compiler.MSIL
                         continue;//event 自动生成的代码，不要
 
                     var nm = this.methodLink[m.Value];
-                    byte entryid;
-                    if (IsEntryCall(m.Value.method, out entryid))
-                    {
-                        spmains[entryid] = nm.name;
-                        logger.Log("Find entrypoint:[" + entryid + "]" + nm.name);
-                    }
+
 
                     //try
                     {
                         nm.returntype = m.Value.returntype;
+                        try
+                        {
+                            var type = m.Value.method.ReturnType.Resolve();
+                            foreach(var i in type.Interfaces)
+                            {
+                                if(i.Name== "IApiInterface")
+                                {
+                                    nm.returntype = "IInteropInterface";
+                                }
+                            }
+                        }
+                        catch (Exception err)
+                        {
+
+                        }
+
                         foreach (var src in m.Value.paramtypes)
                         {
                             nm.paramtypes.Add(new NeoParam(src.name, src.type));
@@ -200,22 +210,14 @@ namespace Neo.Compiler.MSIL
                     }
                 }
             }
-            if (mainmethod == "" && spmains.Count == 0)
+            if (mainmethod == "" )
             {
                 throw new Exception("Can't find EntryPoint,Check it.");
             }
-            else if (mainmethod != "" && spmains.Count > 0)
-            {
-                throw new Exception("Have Main Method and Spec EntryPoint sametime,Check it.");
-            }
-            else if (mainmethod != "")
+            else
             {
                 //单一默认入口
                 logger.Log("Find entrypoint:" + mainmethod);
-            }
-            else if (spmains.Count > 0) //拥有条件入口的情况
-            {
-                mainmethod = this.CreateJmpMain(spmains);
             }
 
             outModule.mainMethod = mainmethod;
@@ -226,62 +228,6 @@ namespace Neo.Compiler.MSIL
 
             //this.outModule.Build();
             return outModule;
-        }
-        private string CreateJmpMain(Dictionary<byte, string> entries)
-        {
-
-            NeoMethod main = new NeoMethod();
-            main.name = "System.Void @JmpMain()";
-            main.displayName = "Main";
-            main.isPublic = true;
-            main.returntype = "System.Void";
-
-
-            var bytes = Encoding.UTF8.GetBytes("Neo.Runtime.GetTrigger");
-            byte[] outbytes = new byte[bytes.Length + 1];
-            outbytes[0] = (byte)bytes.Length;
-            Array.Copy(bytes, 0, outbytes, 1, bytes.Length);
-
-
-            this.addr = 0;
-            this.addrconv.Clear();
-
-            _Convert1by1(VM.OpCode.SYSCALL, null, main, outbytes);
-            //_Convert1by1(VM.OpCode.TOALTSTACK, null, main);
-
-            //for
-            //ifjmp
-            //ifjmp
-            //throw
-            //for
-            //jmp
-            //jmp
-            //jmp
-            foreach (var key in entries.Keys)
-            {
-                _Convert1by1(VM.OpCode.DUP, null, main);
-                _ConvertPush(key, null, main);
-                _Convert1by1(VM.OpCode.NUMEQUAL, null, main);
-                var jmp = _Convert1by1(VM.OpCode.JMPIF, null, main, new byte[2]);
-                jmp.needfix = true;
-                jmp.srcaddr = key;
-            }
-            _Convert1by1(VM.OpCode.THROW, null, main);
-            foreach (var key in entries.Keys)
-            {
-                var callbegin = _Convert1by1(VM.OpCode.DROP, null, main);
-                this.addrconv[key] = callbegin.addr;
-
-                var name = entries[key];
-                var jmp = _Convert1by1(VM.OpCode.JMP, null, main, new byte[2]);
-                jmp.needfixfunc = true;
-                jmp.srcfunc = name;
-            }
-
-            this.ConvertAddrInMethod(main);
-
-            outModule.mapMethods[main.name] = main;
-            return main.name;
         }
         private void LinkCode(string main)
         {
@@ -359,8 +305,14 @@ namespace Neo.Compiler.MSIL
                     {
                         _insertEndCode(from, to, src);
                     }
-
-                    skipcount = ConvertCode(from, src, to);
+                    try
+                    {
+                        skipcount = ConvertCode(from, src, to);
+                    }
+                    catch(Exception err)
+                    {
+                        throw new Exception("error:" + from.method.FullName + "::" + src, err);
+                    }
                 }
             }
 

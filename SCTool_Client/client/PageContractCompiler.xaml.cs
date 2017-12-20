@@ -159,9 +159,16 @@ namespace client
             var apitext = textAPI.Text;
             var url = apitext + "parse?language=csharp";
 
-
-            byte[] retvar = wc.UploadFile(url, filename);
-            var strback = System.Text.Encoding.UTF8.GetString(retvar);
+            string strback = null;
+            try
+            {
+                byte[] retvar = wc.UploadFile(url, filename);
+                strback = System.Text.Encoding.UTF8.GetString(retvar);
+            }
+            catch(Exception err)
+            {
+                return;
+            }
             ClearLog();
             this.textHash.Text = "";
             this.textHexScript.Text = "";

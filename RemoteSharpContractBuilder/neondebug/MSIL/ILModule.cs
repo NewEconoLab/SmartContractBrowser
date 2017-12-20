@@ -134,9 +134,49 @@ namespace Neo.Compiler.MSIL
                             if (m.Name == "Invoke")
                             {
                                 this.returntype = m.ReturnType.FullName;
+                                try
+                                {
+                                    var _type = m.ReturnType.Resolve();
+                                    foreach (var i in _type.Interfaces)
+                                    {
+                                        if (i.Name == "IApiInterface")
+                                        {
+                                            this.returntype = "IInteropInterface";
+                                        }
+                                    }
+                                }
+                                catch (Exception err)
+                                {
+
+                                }
                                 foreach (var src in m.Parameters)
                                 {
-                                    this.paramtypes.Add(new NeoParam(src.Name, src.ParameterType.FullName));
+                                    string paramtype = src.ParameterType.FullName;
+                                    if (src.ParameterType.IsGenericParameter)
+                                    {
+                                        var gtype = src.ParameterType as Mono.Cecil.GenericParameter;
+
+                                        var srcgtype = field.FieldType as Mono.Cecil.GenericInstanceType;
+                                        var rtype = srcgtype.GenericArguments[gtype.Position];
+                                        paramtype = rtype.FullName;
+                                        try
+                                        {
+                                            var _type = rtype.Resolve();
+                                            foreach (var i in _type.Interfaces)
+                                            {
+                                                if (i.Name == "IApiInterface")
+                                                {
+                                                    paramtype = "IInteropInterface";
+                                                }
+                                            }
+                                        }
+                                        catch (Exception err)
+                                        {
+
+                                        }
+                                    }
+                                    this.paramtypes.Add(new NeoParam(src.Name, paramtype));
+
                                 }
                             }
                         }
@@ -171,7 +211,23 @@ namespace Neo.Compiler.MSIL
                     hasParam = true;
                     foreach (var p in method.Parameters)
                     {
-                        this.paramtypes.Add(new NeoParam(p.Name, p.ParameterType.FullName));
+                        string paramtype = p.ParameterType.FullName;
+                        try
+                        {
+                            var _type = p.ParameterType.Resolve();
+                            foreach (var i in _type.Interfaces)
+                            {
+                                if (i.Name == "IApiInterface")
+                                {
+                                    paramtype = "IInteropInterface";
+                                }
+                            }
+                        }
+                        catch (Exception err)
+                        {
+
+                        }
+                        this.paramtypes.Add(new NeoParam(p.Name, paramtype));
                     }
                 }
                 if (method.HasBody)

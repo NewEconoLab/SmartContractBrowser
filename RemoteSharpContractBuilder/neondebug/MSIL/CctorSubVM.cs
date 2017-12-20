@@ -141,13 +141,23 @@ namespace Neo.Compiler.MSIL
                                     {
                                         var text = (string)calcStack.Pop();
                                         var value = (int)attr.ConstructorArguments[0].Value;
-                                        if (value == 1)//AddressString2ScriptHashBytes to bytes
+                                        var type = attr.ConstructorArguments[0].Type.Resolve();
+                                        string attrname = "";
+                                        foreach(var f in type.Fields)
+                                        {
+                                            if(f.Constant!=null&& (int)f.Constant== value)
+                                            {
+                                                attrname = f.Name;
+                                                break;
+                                            }
+                                        }
+                                        if (attrname == "ToScriptHash")//AddressString2ScriptHashBytes to bytes
                                         {
                                             var bytes = NEO.AllianceOfThinWallet.Cryptography.Base58.Decode(text);
                                             var hash = bytes.Skip(1).Take(20).ToArray();
                                             calcStack.Push(hash);
                                         }
-                                        else if (value == 0)//HexString2Bytes to bytes[]
+                                        else if (attrname == "HexToBytes")//HexString2Bytes to bytes[]
                                         {
                                             if (text.IndexOf("0x") == 0) text = text.Substring(2);
                                             var hex = HexString2Bytes(text);

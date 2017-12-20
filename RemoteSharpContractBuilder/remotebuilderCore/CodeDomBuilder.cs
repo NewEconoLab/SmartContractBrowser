@@ -36,6 +36,8 @@ namespace remotebuilderCore
         {
             var path = System.IO.Path.GetDirectoryName(this.GetType().Assembly.Location);
             path = System.IO.Path.Combine(path, temppath);
+            if (System.IO.Directory.Exists(path) == false)
+                System.IO.Directory.CreateDirectory(path);
             var bts = System.Text.Encoding.UTF8.GetBytes(src);
             var hashname = ToHexString(sha1.ComputeHash(bts));
             var outpath = System.IO.Path.Combine(path, hashname + ".dll");

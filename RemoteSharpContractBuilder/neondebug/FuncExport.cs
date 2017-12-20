@@ -50,6 +50,7 @@ namespace vmtool
                     return "Array";
 
                 case "__InteropInterface":
+                case "IInteropInterface":
                     return "InteropInterface";
 
                 case "System.Void":
@@ -109,10 +110,8 @@ namespace vmtool
                     funcname = sps.Last();
                 }
                 funcsign.SetDictValue("name", function.Value.displayName);
-                var rtype = ConvType(mm.returntype);
-                funcsign.SetDictValue("returntype", rtype);
                 MyJson.JsonNode_Array funcparams = new MyJson.JsonNode_Array();
-                funcsign["paramaters"] = funcparams;
+                funcsign["parameters"] = funcparams;
                 if (mm.paramtypes != null)
                 {
                     foreach (var v in mm.paramtypes)
@@ -125,6 +124,9 @@ namespace vmtool
                         item.SetDictValue("type", ptype);
                     }
                 }
+
+                var rtype = ConvType(mm.returntype);
+                funcsign.SetDictValue("returntype", rtype);
             }
 
             //events
@@ -140,10 +142,8 @@ namespace vmtool
                 eventsigns.Add(funcsign);
 
                 funcsign.SetDictValue("name", events.Value.displayName);
-                var rtype = ConvType(mm.returntype);
-                funcsign.SetDictValue("returntype", rtype);
                 MyJson.JsonNode_Array funcparams = new MyJson.JsonNode_Array();
-                funcsign["paramaters"] = funcparams;
+                funcsign["parameters"] = funcparams;
                 if (mm.paramtypes != null)
                 {
                     foreach (var v in mm.paramtypes)
@@ -156,6 +156,8 @@ namespace vmtool
                         item.SetDictValue("type", ptype);
                     }
                 }
+                var rtype = ConvType(mm.returntype);
+                funcsign.SetDictValue("returntype", rtype);
             }
 
             return outjson;

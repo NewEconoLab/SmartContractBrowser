@@ -50,7 +50,7 @@ namespace ThinNeo.Debug
 
             if (System.IO.File.Exists(tranfile) == false)
             {
-                throw new Exception("你的数据源里没有log信息,他可能还没有同步，或者这不是一个智能合约交易");
+                throw new Exception("load file error");
             }
             using (var ms = new System.IO.MemoryStream(System.IO.File.ReadAllBytes(tranfile)))
             {

@@ -28,20 +28,70 @@ namespace client
             InitializeComponent();
         }
         public ThinNeo.Debug.DebugTool debugtool = new ThinNeo.Debug.DebugTool();
-
+        System.Net.WebClient wc = new client.MyWC();
+        void downloadScript(string api,string savepath,string scripthash)
+        {
+            var str = wc.DownloadString(api + "get?hash=" + scripthash);
+            var json = MyJson.Parse(str).AsDict();
+            if (json.ContainsKey("cs"))
+            {
+                var srcResult = json["cs"].AsString();
+                srcResult = Uri.UnescapeDataString(srcResult);
+                var outfile = System.IO.Path.Combine(savepath, scripthash+".cs");
+                System.IO.File.WriteAllText(outfile, srcResult);
+            }
+            if (json.ContainsKey("avm"))
+            {
+                var avmResult = json["avm"].AsString();
+                var bts = ThinNeo.Helper.HexString2Bytes(avmResult);
+                var outfile = System.IO.Path.Combine(savepath, scripthash + ".avm");
+                System.IO.File.WriteAllBytes(outfile, bts);
+            }
+            if (json.ContainsKey("map"))
+            {
+                var mapResult = json["map"].AsString();
+                mapResult = Uri.UnescapeDataString(mapResult);
+                var outfile = System.IO.Path.Combine(savepath, scripthash + ".debug.json");
+                System.IO.File.WriteAllText(outfile, mapResult);
+            }
+        }
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            string pathLog = textLogPath.Text;
-            string pathScript = textScriptDebug.Text;
+            string rootPath = System.IO.Path.GetDirectoryName(this.GetType().Assembly.Location);
+            string pathLog = System.IO.Path.Combine(rootPath, "tempLog");
+            if (System.IO.Directory.Exists(pathLog) == false)
+                System.IO.Directory.CreateDirectory(pathLog);
+            var transid = this.textTid.Text;
+            byte[] info = ThinNeo.Helper.HexString2Bytes(transid.ToLower());
+            transid = "0x" + ThinNeo.Helper.Bytes2HexString(info);
+            {//download and write debugfile
+                var filename = System.IO.Path.Combine(pathLog, transid + ".fulllog.7z");
+                var url = textAPITran.Text + "?jsonrpc=2.0&id=1&method=getfullloginfo&params=[%22" + transid + "%22]";
+                var rtnstr = wc.DownloadString(url);
+                var json = MyJson.Parse(rtnstr).AsDict();
+                if(json.ContainsKey("result")==false)
+                {
+                    MessageBox.Show("找不到此交易的智能合约log。Can not find fullloginfo for this transaction.");
+                    return;
+                }
+                var r = json["result"].AsString();
+                var bts = ThinNeo.Helper.HexString2Bytes(r);
+                System.IO.File.WriteAllBytes(filename, bts);
+            }
+
+            string pathScript = System.IO.Path.Combine(rootPath, "tempScript");
+            if (System.IO.Directory.Exists(pathScript) == false)
+                System.IO.Directory.CreateDirectory(pathScript);
             this.listLoadInfo.Items.Clear();
             try
             {
-                debugtool.Load(pathLog, pathScript, this.textTid.Text);
+                debugtool.Load(pathLog, pathScript, transid);
                 this.listLoadInfo.Items.Add("load finish");
                 List<string> scriptnames = new List<string>();
                 debugtool.fullLog.script.GetAllScriptName(scriptnames);
                 foreach (var s in scriptnames)
                 {
+                    downloadScript(this.textAPI.Text, pathScript, s);
                     var b = debugtool.LoadScript(s);
                     this.listLoadInfo.Items.Add("script:" + b + ":" + s);
                 }
@@ -55,6 +105,12 @@ namespace client
                 this.listLoadInfo.Items.Add(err.Message);
             }
         }
+
+        private byte[] HexString2Bytes(string transid)
+        {
+            throw new NotImplementedException();
+        }
+
         void InitTreeCode()
         {
             treeCode.Items.Clear();
@@ -329,6 +385,36 @@ namespace client
         {
             var data = listCare.SelectedItem as ThinNeo.Debug.CareItem;
             SetTreeData(data.item);
+
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            //testApi
+            var apitext = textAPI.Text;
+            try
+            {
+                var str = wc.DownloadString(apitext + "help");
+                MessageBox.Show("api ok:" + str);
+            }
+            catch (Exception err)
+            {
+                MessageBox.Show("api fail:" + err.Message, "", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void Button_Click_2(object sender, RoutedEventArgs e)
+        {
+            var apitext = textAPITran.Text;
+            try
+            {
+                var str = wc.DownloadString(apitext + "?jsonrpc=2.0&id=1&method=getblockcount&params=[]");
+                MessageBox.Show("api ok:" + str);
+            }
+            catch (Exception err)
+            {
+                MessageBox.Show("api fail:" + err.Message, "", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
 
         }
     }
