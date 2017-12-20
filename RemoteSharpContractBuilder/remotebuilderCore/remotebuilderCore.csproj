@@ -4,12 +4,14 @@
     <TargetFramework>net47</TargetFramework>
     <ApplicationIcon />
     <OutputType>Exe</OutputType>
+    <PackageId>rbc</PackageId>
     <StartupObject />
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x64</PlatformTarget>
     <OutputPath>..\bin</OutputPath>
+    <WarningLevel>4</WarningLevel>
   </PropertyGroup>
 
   <ItemGroup>
@@ -19,6 +21,10 @@
     <Content Include="Neo.SmartContract.Framework.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Libuv" Version="1.10.0" />
   </ItemGroup>
 
   <ItemGroup>
