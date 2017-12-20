@@ -59,6 +59,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Dialog Get Contract.xaml.cs">
+      <DependentUpon>Dialog Get Contract.xaml</DependentUpon>
+    </Compile>
     <Compile Include="PageContractCompiler.xaml.cs">
       <DependentUpon>PageContractCompiler.xaml</DependentUpon>
     </Compile>
@@ -68,6 +71,10 @@
     <Compile Include="PageShowUTXO.xaml.cs">
       <DependentUpon>PageShowUTXO.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialog Get Contract.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="PageContractCompiler.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

@@ -129,5 +129,14 @@ namespace client
             {
             }
         }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            Dialog_Get_Contract dialog = new Dialog_Get_Contract();
+            if(dialog.ShowDialog()==true)
+            {
+                this.textAvm.Text = dialog.avmResult;
+            }
+        }
     }
 }

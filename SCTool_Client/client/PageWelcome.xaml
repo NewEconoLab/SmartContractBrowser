@@ -38,7 +38,7 @@
                 </Grid.ColumnDefinitions>
                 <TextBox x:Name="textAvm" Margin="0" Grid.Row="2" TextWrapping="Wrap" Text="0066" Grid.ColumnSpan="2" TextChanged="textAvm_TextChanged" />
                 <Button Content="FromFile" Margin="0" Grid.Row="1" Click="Button_Click"/>
-                <Button Content="FromNelSrc" Margin="0" Grid.Row="1" Grid.Column="1"/>
+                <Button Content="FromNelSrc" Margin="0" Grid.Row="1" Grid.Column="1" Click="Button_Click_1"/>
 
                 <ListBox x:Name="listASM" Grid.Column="2" Margin="0" Grid.Row="2"/>
                 <ListBox x:Name="listSysCall" Grid.Column="3" Margin="0" Grid.Row="2"/>
