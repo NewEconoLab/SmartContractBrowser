@@ -86,6 +86,21 @@ namespace ThinNeo
             var hash2 = ripemd160.ComputeHash(hash1);
             return hash2;
         }
+        public static byte[] GetPublicKeyHashFromAddress(string address)
+        {
+            var alldata = Base58.Decode(address);
+            var data = alldata.Take(alldata.Length - 4).ToArray();
+            if (data[0] != 0x17)
+                throw new Exception("not a address");
+            var hash = sha256.ComputeHash(data);
+            hash = sha256.ComputeHash(hash);
+            var hashbts = hash.Take(4).ToArray();
+            var datahashbts = alldata.Skip(alldata.Length - 4).ToArray();
+            if (hashbts.SequenceEqual(datahashbts) == false)
+                throw new Exception("not match hash");
+            var pkhash = data.Skip(1).ToArray();
+            return pkhash;
+        }
         public static string Bytes2HexString(byte[] data)
         {
             StringBuilder sb = new StringBuilder();

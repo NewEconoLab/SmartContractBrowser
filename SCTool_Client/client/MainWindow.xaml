@@ -13,15 +13,15 @@
 
                 </Frame>
             </TabItem>
-            <TabItem Header="智能合约编译(本地)">
+            <TabItem Header="Compile C# Contract online">
                 <Frame Content="Frame" Source="/client;component/PageContractCompiler.xaml">
 
                 </Frame>
             </TabItem>
-            <TabItem Header="交易调试器(本地)">
+            <TabItem Header="Debug smartcontract transaction">
                 <Frame Content="Frame" Margin="0" Source="/client;component/PageContractDebug.xaml"/>
             </TabItem>
-            <TabItem Header="UTXO查看(远程)"  >
+            <TabItem Header="Find UTXO"  >
                 <Frame Content="Frame" Source="/client;component/PageShowUTXO.xaml"></Frame>
             </TabItem>
         </TabControl>

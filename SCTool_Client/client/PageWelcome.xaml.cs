@@ -52,11 +52,16 @@ namespace client
                 return;
             }
             listASM.Items.Clear();
+            listSysCall.Items.Clear();
             foreach (var op in ops)
             {
                 try
                 {
                     var str = op.ToString();
+                    if (op.code == ThinNeo.VM.OpCode.SYSCALL)
+                    {
+                        listSysCall.Items.Add(op);
+                    }
                     listASM.Items.Add(op);
                 }
                 catch
@@ -83,6 +88,45 @@ namespace client
                     MessageBox.Show("load file error:" + ofd.FileName);
                     return;
                 }
+            }
+        }
+
+        private void Page_Loaded(object sender, RoutedEventArgs e)
+        {
+            textAvm_TextChanged(null, null);
+        }
+
+        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            textPrivate.Text = "";
+            try
+            {
+                var prikey = ThinNeo.Helper.GetPrivateKeyFromWIF(textWIF.Text);
+                textPrivate.Text = "Prikey:" + ThinNeo.Helper.Bytes2HexString(prikey) + "\n";
+                var pubkey = ThinNeo.Helper.GetPublicKeyFromPrivateKey(prikey);
+                textPrivate.Text += "Pubkey:" + ThinNeo.Helper.Bytes2HexString(pubkey) + "\n";
+                var pubkeyhash = ThinNeo.Helper.GetPublicKeyHash(pubkey);
+                textPrivate.Text += "PubkeyHash:" + ThinNeo.Helper.Bytes2HexString(pubkeyhash) + "\n";
+                var address = ThinNeo.Helper.GetAddressFromScriptHash(pubkeyhash);
+                textPrivate.Text += "Address:" + address + "\n";
+            }
+            catch
+            {
+
+            }
+        }
+
+        private void textAdress_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            textHash.Text = "";
+            try
+            {
+                var pubkeyhash = ThinNeo.Helper.GetPublicKeyHashFromAddress(textAdress.Text);
+
+                textHash.Text= "Hash:" + ThinNeo.Helper.Bytes2HexString(pubkeyhash) + "\n";
+             }
+            catch
+            {
             }
         }
     }
