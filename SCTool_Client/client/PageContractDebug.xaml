@@ -1,0 +1,83 @@
+﻿<Page x:Class="SmartContractBrowser.ContractDebug"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+            xmlns:avalonedit="http://icsharpcode.net/sharpdevelop/avalonedit" 
+      xmlns:local="clr-namespace:SmartContractBrowser"
+      mc:Ignorable="d" 
+      d:DesignHeight="600.957" d:DesignWidth="726.087"
+      Title="ContractDebug" Loaded="Page_Loaded">
+
+    <Grid Background="#FFE5E5E5" FocusManager.IsFocusScope="True">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="160*"/>
+            <RowDefinition Height="191*"/>
+            <RowDefinition Height="250*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="205*"/>
+            <ColumnDefinition Width="66*"/>
+            <ColumnDefinition Width="64*"/>
+            <ColumnDefinition Width="117*"/>
+            <ColumnDefinition Width="115*"/>
+            <ColumnDefinition Width="159*"/>
+        </Grid.ColumnDefinitions>
+        <GroupBox Header="数值查看工具" Grid.Column="2" Grid.ColumnSpan="2">
+            <TreeView x:Name="treeData"></TreeView>
+        </GroupBox>
+        <GroupBox Header="调试数据源" Margin="0" Grid.Column="4" Grid.ColumnSpan="2">
+            <Grid>
+                <Label Content="此处使用文件夹作为数据源，正式环境将使用服务器数据源" HorizontalAlignment="Left" Margin="4,5,0,0" VerticalAlignment="Top"/>
+                <TextBox x:Name="textLogPath" HorizontalAlignment="Left" Height="23" Margin="172,30,0,0" TextWrapping="Wrap" Text="D:\Neo\FullLogs" VerticalAlignment="Top" Width="182"/>
+                <TextBlock HorizontalAlignment="Left" Margin="10,36,0,0" TextWrapping="Wrap" Text="智能合约交易调试日志路径" VerticalAlignment="Top"/>
+                <TextBlock HorizontalAlignment="Left" Margin="10,63,0,0" TextWrapping="Wrap" Text="智能合约编译输出路径" VerticalAlignment="Top"/>
+                <TextBox x:Name="textScriptDebug" HorizontalAlignment="Left" Height="23" Margin="172,58,0,0" TextWrapping="Wrap" Text="D:\Neo\ScriptDebug" VerticalAlignment="Top" Width="182"/>
+            </Grid>
+        </GroupBox>
+        <GroupBox Header="调试交易" Margin="0" Grid.RowSpan="1" Grid.ColumnSpan="2">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="85"/>
+                    <RowDefinition Height="99*"/>
+                </Grid.RowDefinitions>
+                <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="交易ID" VerticalAlignment="Top"/>
+                <TextBox x:Name="textTid" HorizontalAlignment="Left" Height="39" Margin="10,20,0,0" TextWrapping="Wrap" Text="0xfc84ab554efb7b2e1e18eb5cdb63d2220bc10eac336ff6957af4775b2c8cb5ac" VerticalAlignment="Top" Width="282"/>
+                <Button Content="加载交易" HorizontalAlignment="Left" Margin="10,64,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click" Grid.RowSpan="2"/>
+                <ListBox x:Name="listLoadInfo" Margin="0,0,1,0" Grid.Row="1"/>
+
+            </Grid>
+        </GroupBox>
+        <GroupBox Header="执行顺序" Margin="0" Grid.Row="1" Grid.ColumnSpan="1" Grid.RowSpan="2">
+            <TreeView x:Name="treeCode" SelectedItemChanged="treeCode_SelectedItemChanged"  FocusManager.IsFocusScope="True"/>
+        </GroupBox>
+        <GroupBox Grid.Column="1" Header="AVM ASM" Margin="0" Grid.Row="2" Grid.RowSpan="1" Grid.ColumnSpan="2">
+            <ListBox x:Name="listBoxASM" FocusManager.IsFocusScope="True" SelectionChanged="listBoxASM_SelectionChanged" />
+        </GroupBox>
+        <GroupBox Grid.Column="1" Header="Info"  Grid.Row="1" Grid.ColumnSpan="2">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="50*"/>
+                    <RowDefinition Height="58*"/>
+                    <RowDefinition Height="16*"/>
+                    <RowDefinition Height="45*"/>
+                </Grid.RowDefinitions>
+                <Label x:Name="selectScript" Content="Label" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                <Label x:Name="selectScriptDebug" Content="Label" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,25,0,0"/>
+                <ListBox x:Name="listStack" Grid.Row="1" SelectionChanged="listStack_SelectionChanged"/>
+                <Label Content="上面是计算栈，下面是临时栈"  Grid.Row="2"/>
+
+                <ListBox x:Name="listAltStack" Grid.Row="3" SelectionChanged="listAltStack_SelectionChanged"/>
+
+            </Grid>
+        </GroupBox>
+        <GroupBox Header ="code" Margin="0" Grid.Row="1" Grid.RowSpan="2"
+                              FocusManager.IsFocusScope="True" Grid.Column="3" Grid.ColumnSpan="2">
+            <avalonedit:TextEditor x:Name="codeEdit"
+                                       ShowLineNumbers="True"    SyntaxHighlighting="C#" FontSize="10pt" IsReadOnly="True" />
+        </GroupBox>
+        <GroupBox Header="特别关注,比如Log、Notify" Grid.Row="1" Grid.RowSpan="2" Grid.Column="5">
+            <ListBox x:Name="listCare" SelectionChanged="listCare_SelectionChanged"></ListBox>
+        </GroupBox>
+    </Grid>
+</Page>
