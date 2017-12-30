@@ -65,7 +65,7 @@ window.onload = () => {
         theme: 'vs-dark'
     });
 
-    var address = 'http://118.31.39.242:81/_api/';
+    var address = 'http://47.96.168.8:82/_api/';
     //var address = 'http://40.125.201.127:81/_api/';
     //var address = 'http://localhost:81/_api/';
     {//test page
