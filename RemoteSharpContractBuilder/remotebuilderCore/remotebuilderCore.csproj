@@ -32,4 +32,10 @@
     <ProjectReference Include="..\neondebug\neondebug.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="extlib.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

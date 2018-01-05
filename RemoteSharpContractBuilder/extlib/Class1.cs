@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace System
+namespace System.ComponentModel
 {
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method | AttributeTargets.Property | AttributeTargets.Event)]
     public class DisplayNameAttribute : Attribute
@@ -18,4 +18,6 @@ namespace System
             private set;
         }
     }
+
+
 }
