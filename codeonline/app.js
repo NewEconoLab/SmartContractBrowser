@@ -64,31 +64,9 @@ window.onload = function () {
         language: 'csharp',
         theme: 'vs-dark'
     });
-    var btnChange = document.getElementById('change');
-    btnChange.onclick = function (ev) {
-        var c = document.getElementById('container');
-        while (c.childElementCount > 0) {
-            c.removeChild(c.children[0]);
-        }
-        if (btnChange.innerText == "->java") {
-            editor = monaco.editor.create(document.getElementById('container'), {
-                value: javacode,
-                language: 'java',
-                theme: 'vs-dark'
-            });
-            btnChange.innerText = "->c#";
-        }
-        else {
-            editor = monaco.editor.create(document.getElementById('container'), {
-                value: csharpcode,
-                language: 'csharp',
-                theme: 'vs-dark'
-            });
-            btnChange.innerText = "->java";
-        }
-    };
-    //var address = 'http://40.125.201.127:8080/_api/';
-    var address = 'http://118.31.39.242:81/_api/';
+    var address = 'http://47.96.168.8:82/_api/';
+    //var address = 'http://40.125.201.127:81/_api/';
+    //var address = 'http://localhost:81/_api/';
     {
         var xhr = new XMLHttpRequest();
         xhr.open("GET", address + 'help');
@@ -111,12 +89,7 @@ window.onload = function () {
             }
         };
         var fdata = new FormData();
-        if (btnChange.innerText == "->java") {
-            fdata.append("language", "csharp");
-        }
-        else {
-            fdata.append("language", "java");
-        }
+        fdata.append("language", "csharp");
         fdata.append("file", localsave.file_str2blob(editor.getValue()));
         xhr.send(fdata);
     };
