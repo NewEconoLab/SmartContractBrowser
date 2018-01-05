@@ -93,10 +93,14 @@ namespace vmtool
             //functions
             var funcsigns = new MyJson.JsonNode_Array();
             outjson["functions"] = funcsigns;
-         
+
+            List<string> names = new List<string>();
+
             foreach (var function in module.mapMethods)
             {
                 var mm = function.Value;
+                if (mm.inSmartContract == false)
+                    continue;
                 if (mm.isPublic == false)
                     continue;
                 var ps = mm.name.Split(new char[] { ' ', '(' }, StringSplitOptions.RemoveEmptyEntries);
@@ -110,6 +114,11 @@ namespace vmtool
                     funcname = sps.Last();
                 }
                 funcsign.SetDictValue("name", function.Value.displayName);
+                if(names.Contains(function.Value.displayName))
+                {
+                    throw new Exception("abi not allow same name functions");
+                }
+                names.Add(function.Value.displayName);
                 MyJson.JsonNode_Array funcparams = new MyJson.JsonNode_Array();
                 funcsign["parameters"] = funcparams;
                 if (mm.paramtypes != null)

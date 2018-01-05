@@ -50,6 +50,7 @@ namespace remotebuilderCore
             
             option.ReferencedAssemblies.Add("Neo.SmartContract.Framework.dll");
             option.ReferencedAssemblies.Add("System.Numerics.dll");
+            option.ReferencedAssemblies.Add("extlib.dll");
             option.OutputAssembly = System.IO.Path.Combine(path, outpath);
             var provider = CodeDomProvider.CreateProvider("c#");
             var br = provider.CompileAssemblyFromSource(option, src);

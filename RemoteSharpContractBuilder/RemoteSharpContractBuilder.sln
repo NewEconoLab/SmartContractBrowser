@@ -19,6 +19,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "httplib2", "httplib2\httpli
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "remotebuilderCore", "remotebuilderCore\remotebuilderCore.csproj", "{6106824A-ABAC-4ED5-AA55-62592A698E49}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "extlib", "extlib\extlib.csproj", "{C6C9B19D-CE76-4148-B43E-EB5E8D4AF257}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -49,6 +51,10 @@ Global
 		{6106824A-ABAC-4ED5-AA55-62592A698E49}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6106824A-ABAC-4ED5-AA55-62592A698E49}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6106824A-ABAC-4ED5-AA55-62592A698E49}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C6C9B19D-CE76-4148-B43E-EB5E8D4AF257}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C6C9B19D-CE76-4148-B43E-EB5E8D4AF257}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C6C9B19D-CE76-4148-B43E-EB5E8D4AF257}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C6C9B19D-CE76-4148-B43E-EB5E8D4AF257}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -59,6 +65,7 @@ Global
 		{47CEC62D-0F4A-434D-A621-1B6433D427A4} = {97A1A791-17A3-406F-8CE2-5641884E89B7}
 		{056130C9-8702-4564-9074-C5E063813CE0} = {2DE04F26-6B2B-438B-B25C-F90993555CE3}
 		{2CF77C10-314D-458C-996B-BD93DC39B5F8} = {97A1A791-17A3-406F-8CE2-5641884E89B7}
+		{C6C9B19D-CE76-4148-B43E-EB5E8D4AF257} = {2DE04F26-6B2B-438B-B25C-F90993555CE3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {95BFB98B-18AE-493F-9C35-432D45273C7D}

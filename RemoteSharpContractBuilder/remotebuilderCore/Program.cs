@@ -7,7 +7,7 @@ namespace remotebuilderCore
         public static void Main(string[] arg1)
         {
             httplib2.RpcServer server = new httplib2.RpcServer();
-            server.Start(System.Net.IPAddress.Any, 81);
+            server.Start(System.Net.IPAddress.Any, 82);
             Compiler compiler = new Compiler();
            
             server.AddParser("/_api/help", compiler.onHelp);

@@ -825,8 +825,10 @@ namespace Neo.Compiler.MSIL
                 //移除上一条指令
                 to.body_Codes.Remove(code.addr);
                 this.addr = code.addr;
-                if (code.bytes != null)
-                    this.addr -= code.bytes.Length;
+
+                //new array 指令處理有問題，這個addr 已經包括了data
+                //if (code.bytes != null)
+                //    this.addr -= code.bytes.Length;
 
                 int n = method.GetNextCodeAddr(src.addr);
                 int n2 = method.GetNextCodeAddr(n);

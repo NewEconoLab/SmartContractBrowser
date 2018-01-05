@@ -70,7 +70,8 @@ namespace Neo.Compiler.MSIL
             this.outModule = new NeoModule(this.logger);
             foreach (var t in _in.mapType)
             {
-                if (t.Key[0] == '<') continue;//系统的，不要
+                if (t.Key.Contains("<"))
+                    continue;//系统的，不要
                 if (t.Key.Contains("_API_")) continue;//api的，不要
                 if (t.Key.Contains(".My."))
                     continue;//vb system
@@ -80,7 +81,7 @@ namespace Neo.Compiler.MSIL
                     if (m.Value.method.IsAddOn || m.Value.method.IsRemoveOn)
                         continue;//event 自动生成的代码，不要
                     NeoMethod nm = new NeoMethod();
-                    if (m.Key == ".cctor")
+                    if (m.Key.Contains(".cctor"))
                     {
                         CctorSubVM.Parse(m.Value, this.outModule);
                         continue;
@@ -98,7 +99,7 @@ namespace Neo.Compiler.MSIL
                             nm.displayName = (string)attr.ConstructorArguments[0].Value;
                         }
                     }
-
+                    nm.inSmartContract = m.Value.method.DeclaringType.BaseType.Name == "SmartContract";
                     nm.isPublic = m.Value.method.IsPublic;
                     this.methodLink[m.Value] = nm;
                     outModule.mapMethods[nm.name] = nm;
@@ -122,7 +123,8 @@ namespace Neo.Compiler.MSIL
 
             foreach (var t in _in.mapType)
             {
-                if (t.Key[0] == '<') continue;//系统的，不要
+                if (t.Key.Contains("<"))
+                    continue;//系统的，不要
                 if (t.Key.Contains("_API_")) continue;//api的，不要
                 if (t.Key.Contains(".My."))
                     continue;//vb system
@@ -131,7 +133,7 @@ namespace Neo.Compiler.MSIL
                 {
 
                     if (m.Value.method == null) continue;
-                    if (m.Key == ".cctor")
+                    if (m.Key.Contains(".cctor"))
                     {
                         continue;
                     }
@@ -147,9 +149,9 @@ namespace Neo.Compiler.MSIL
                         try
                         {
                             var type = m.Value.method.ReturnType.Resolve();
-                            foreach(var i in type.Interfaces)
+                            foreach (var i in type.Interfaces)
                             {
-                                if(i.Name== "IApiInterface")
+                                if (i.Name == "IApiInterface")
                                 {
                                     nm.returntype = "IInteropInterface";
                                 }
@@ -192,25 +194,22 @@ namespace Neo.Compiler.MSIL
                 if (key.Contains("::Main("))
                 {
                     NeoMethod m = outModule.mapMethods[key];
-
-                    foreach (var l in this.methodLink)
+                    if (m.inSmartContract)
                     {
-                        if (l.Value == m)
+                        foreach (var l in this.methodLink)
                         {
-                            var srcm = l.Key.method;
-                            if (srcm.DeclaringType.BaseType.Name == "SmartContract")
+                            if (l.Value == m)
                             {
-
                                 if (mainmethod != "")
                                     throw new Exception("Have too mush EntryPoint,Check it.");
                                 mainmethod = key;
-
                             }
                         }
                     }
+
                 }
             }
-            if (mainmethod == "" )
+            if (mainmethod == "")
             {
                 throw new Exception("Can't find EntryPoint,Check it.");
             }
@@ -309,7 +308,7 @@ namespace Neo.Compiler.MSIL
                     {
                         skipcount = ConvertCode(from, src, to);
                     }
-                    catch(Exception err)
+                    catch (Exception err)
                     {
                         throw new Exception("error:" + from.method.FullName + "::" + src, err);
                     }
@@ -845,7 +844,7 @@ namespace Neo.Compiler.MSIL
                 case CodeEx.Ldsfld:
 
                     {
-
+                        _Convert1by1(VM.OpCode.NOP, src, to);
                         var d = src.tokenUnknown as Mono.Cecil.FieldDefinition;
                         //如果是readonly，可以pull个常量上来的
                         if (

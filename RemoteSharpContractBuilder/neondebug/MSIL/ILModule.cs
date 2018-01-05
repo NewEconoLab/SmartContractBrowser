@@ -78,16 +78,16 @@ namespace Neo.Compiler.MSIL
                 {
                     var method = new ILMethod(this, null);
                     method.fail = "只能导出static 函数";
-                    methods[m.Name] = method;
+                    methods[m.FullName] = method;
                 }
                 else
                 {
                     var method = new ILMethod(this, m);
-                    if (methods.ContainsKey(m.Name))
+                    if (methods.ContainsKey(m.FullName))
                     {
                         throw new Exception("already have a func named:" + type.FullName + "::" + m.Name);
                     }
-                    methods[m.Name] = method;
+                    methods[m.FullName] = method;
                 }
             }
         }
