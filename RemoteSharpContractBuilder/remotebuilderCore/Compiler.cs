@@ -312,7 +312,18 @@ namespace remotebuilderCore
             }
             Console.WriteLine("docomplile succ:");
 
-            return item.ToString();
+            string res = item.ToString();
+
+
+            try {
+                //编译结果入库mongo
+                mongoHelper mh = new mongoHelper();
+                var key = item["hash"].ToString();
+                mh.insertJson2MongoOnlyonce(res,item["hash"].ToString());
+            }
+            catch { }
+
+            return res;
         }
         //{"tag":0,"hex":"00C56B51616C7566","hash":"8CC00DB1FC4D513520D313DF1A600E4CE6CCA661A37833B5264726A8A449CD09","funcsigns":{"A::Main":{"name":"A::Main","returntype":"number","params":[]
         //{"tag":-3,"msg":"compile fail.","errors":[{"msg":"未能找到类型或命名空间名称“in3t”(是否缺少 using 指令或程序集引用?)","line":7,"col":19,"tag":"错误"}]}
@@ -357,6 +368,7 @@ namespace remotebuilderCore
                 txt = Uri.EscapeDataString(txt);
                 json.SetDictValue("abi", txt);
             }
+
             return json.ToString();
         }
     }
