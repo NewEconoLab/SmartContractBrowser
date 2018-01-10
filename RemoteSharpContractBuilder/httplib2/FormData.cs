@@ -10,6 +10,7 @@ namespace httplib2
 {
     public class FormData
     {
+        public string remoteIP = string.Empty;
         public Dictionary<string, string> mapParams = new Dictionary<string, string>();
         public Dictionary<string, byte[]> mapFiles = new Dictionary<string, byte[]>();
         public static async Task<FormData> FromRequest(HttpRequest request)
@@ -18,6 +19,7 @@ namespace httplib2
 
             {
                 FormData data = new FormData();
+                data.remoteIP = request.HttpContext.Connection.RemoteIpAddress.ToString();
                 foreach (var kv in request.Query)
                 {
                     data.mapParams[kv.Key] = kv.Value[0];

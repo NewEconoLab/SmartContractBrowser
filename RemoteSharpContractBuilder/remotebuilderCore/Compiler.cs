@@ -322,12 +322,7 @@ namespace remotebuilderCore
                 string hash = item["hash"].ToString();
                 JObject J = JObject.Parse(getFile2Json(hash));
                 J.Add("hash", hash);
-                string requestIP = string.Empty;
-                if (input.mapParams["requestIP"] != null)
-                {
-                    requestIP = input.mapParams["requestIP"];
-                }
-                J.Add("requestIP", requestIP);
+                J.Add("requestIP", input.remoteIP);
                 J["cs"] = HttpUtility.UrlDecode((string)J["cs"]);
                 J["map"] = JArray.Parse(HttpUtility.UrlDecode((string)J["map"]));
                 J["abi"] = JObject.Parse(HttpUtility.UrlDecode((string)J["abi"]));
