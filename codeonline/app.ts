@@ -35,6 +35,35 @@
 }
 window.onload = () => {
 
+    function syntaxHighlight(json) {
+        if (typeof(json) != 'string') {
+            json = JSON.stringify(json, null, 4);
+            //return json;
+        }
+        json = json.replace(/&/g, '&').replace(/</g, '<').replace(/>/g, '>');
+        return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
+            var cls = 'number';
+            if (/^"/.test(match)) {
+                if (/:$/.test(match)) {
+                    cls = 'key';
+                } else {
+                    cls = 'string';
+                }
+            } else if (/true|false/.test(match)) {
+                cls = 'boolean';
+            } else if (/null/.test(match)) {
+                cls = 'null';
+            }
+            if (cls == 'key') {
+                return '<span class="' + cls + '">' + match + '</span>';
+            }
+            else {
+                return '<span class="' + cls + '">' + match + '</span><br/>';
+            }
+
+        });
+    }
+
     var csharpcode = [
         'using Neo.SmartContract.Framework;',
         'using Neo.SmartContract.Framework.Services.Neo;',
@@ -65,6 +94,7 @@ window.onload = () => {
         theme: 'vs-dark'
     });
 
+    //var address = 'http://localhost:82/_api/';
     var address = 'http://47.96.168.8:82/_api/';
     //var address = 'http://40.125.201.127:81/_api/';
     //var address = 'http://localhost:81/_api/';
@@ -74,8 +104,9 @@ window.onload = () => {
         xhr.onreadystatechange = (ev) => {
 
             if (xhr.readyState == 4) {
-                var txt = document.getElementById('info') as HTMLSpanElement;
-                txt.innerText = xhr.responseText;
+                $('#info').html(syntaxHighlight(JSON.parse(xhr.responseText)));
+                //var txt = document.getElementById('info') as HTMLSpanElement;
+                //txt.innerText = syntaxHighlight(xhr.responseText);
             }
         }
         xhr.send();
@@ -88,14 +119,17 @@ window.onload = () => {
         xhr.onreadystatechange = (ev) => {
 
             if (xhr.readyState == 4) {
-                var txt = document.getElementById('info') as HTMLSpanElement;
-                txt.innerText = xhr.responseText;
+                var J = JSON.parse(xhr.responseText);
+                J["funcsigns"] = JSON.parse(J["funcsigns"]);
+                $('#info').html(syntaxHighlight(J));
+                //var txt = document.getElementById('info') as HTMLSpanElement;
+                //txt.innerText = syntaxHighlight(xhr.responseText);
             }
         }
 
         var fdata = new FormData();
         fdata.append("language", "csharp");
-
+        fdata.append("requestIP", $('#ip').val());
         fdata.append("file", localsave.file_str2blob(editor.getValue()));
 
         xhr.send(fdata);

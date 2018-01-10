@@ -82,10 +82,12 @@
     <Content Include="min\vs\language\typescript\src\mode.js" />
     <Content Include="min\vs\language\typescript\src\worker.js" />
     <Content Include="min\vs\loader.js" />
+    <Content Include="requestIP.js" />
     <Content Include="web.config" />
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="app.ts" />
+    <TypeScriptCompile Include="jquery.d.ts" />
     <TypeScriptCompile Include="monaco.d.ts" />
   </ItemGroup>
   <ItemGroup>

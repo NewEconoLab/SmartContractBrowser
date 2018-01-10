@@ -3,16 +3,35 @@
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+	<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.2.1.min.js"></script>
+	<script src="requestIP.js"></script>
+    <style>
+        pre {outline: 1px solid #ccc; padding: 5px; margin: 5px; }
+        .string { color: green; }
+        .number { color: darkorange; }
+        .boolean { color: blue; }
+        .null { color: magenta; }
+        .key { color: red; }
+    </style>
+
 </head>
 <body>
-
+    <input type="hidden" id="ip">
 
     <img src="neo.png" style="width:64px;height:64px" />
     <h2>NEO C#智能合约在线编译器v2  Neo C# SmartContract online compiler V2</h2>
-    <span id="info"></span>
     <hr />
     <button id="doit">compile online</button>
-    <div id="container" style="width:800px;height:600px;border:1px solid grey"></div>
+    <table>
+        <tr>
+            <td>
+                <div id="container" style="width:800px;height:600px;border:1px solid grey"></div>
+            </td>
+            <td>
+                <div id="info" style="width:800px;height:600px;border:1px solid grey"></div>
+            </td>
+        </tr>
+    </table>   
 
     <script src="min/vs/loader.js"></script>
     <script src="app.js"></script>

@@ -4,6 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System.Web;
 
 namespace remotebuilderCore
 {
@@ -312,24 +315,82 @@ namespace remotebuilderCore
             }
             Console.WriteLine("docomplile succ:");
 
-            string res = item.ToString();
-
-
-            try {
+            try
+            {
                 //编译结果入库mongo
                 mongoHelper mh = new mongoHelper();
-                var key = item["hash"].ToString();
-                mh.insertJson2MongoOnlyonce(res,item["hash"].ToString());
+                string hash = item["hash"].ToString();
+                JObject J = JObject.Parse(getFile2Json(hash));
+                J.Add("hash", hash);
+                string requestIP = string.Empty;
+                if (input.mapParams["requestIP"] != null)
+                {
+                    requestIP = input.mapParams["requestIP"];
+                }
+                J.Add("requestIP", requestIP);
+                J["cs"] = HttpUtility.UrlDecode((string)J["cs"]);
+                J["map"] = JArray.Parse(HttpUtility.UrlDecode((string)J["map"]));
+                J["abi"] = JObject.Parse(HttpUtility.UrlDecode((string)J["abi"]));
+                mh.insertJson2MongoOnlyonce(JsonConvert.SerializeObject(J),hash);
             }
-            catch { }
+            catch (Exception e)
+            {
+                var a = e;
+            }
 
-            return res;
+            return item.ToString();
         }
         //{"tag":0,"hex":"00C56B51616C7566","hash":"8CC00DB1FC4D513520D313DF1A600E4CE6CCA661A37833B5264726A8A449CD09","funcsigns":{"A::Main":{"name":"A::Main","returntype":"number","params":[]
         //{"tag":-3,"msg":"compile fail.","errors":[{"msg":"未能找到类型或命名空间名称“in3t”(是否缺少 using 指令或程序集引用?)","line":7,"col":19,"tag":"错误"}]}
         public async Task<string> onGetfile(FormData input)
         {
             var hash = input.mapParams["hash"];
+            return getFile2Json(hash);
+
+            //if (hash.IndexOf("0x") == -1)
+            //{
+            //    hash = "0x" + hash;
+            //}
+            //MyJson.JsonNode_Object json = new MyJson.JsonNode_Object();
+            //string path = System.IO.Path.GetDirectoryName(this.GetType().Assembly.Location);
+            //path = System.IO.Path.Combine(path, outputpath);
+            //if (System.IO.Directory.Exists(path) == false)
+            //    System.IO.Directory.CreateDirectory(path);
+
+            //string pathAvm = System.IO.Path.Combine(path, hash + ".avm");
+            //string pathCs = System.IO.Path.Combine(path, hash + ".cs");
+            //string pathMap = System.IO.Path.Combine(path, hash + ".map.json");
+            //string pathAbi = System.IO.Path.Combine(path, hash + ".abi.json");
+
+            //if (System.IO.File.Exists(pathAvm))
+            //{
+            //    var bts = System.IO.File.ReadAllBytes(pathAvm);
+            //    json.SetDictValue("avm", ToHexString(bts));
+            //}
+            //if (System.IO.File.Exists(pathCs))
+            //{
+            //    var txt = System.IO.File.ReadAllText(pathCs);
+            //    txt = Uri.EscapeDataString(txt);
+            //    json.SetDictValue("cs", txt);
+            //}
+            //if (System.IO.File.Exists(pathMap))
+            //{
+            //    var txt = System.IO.File.ReadAllText(pathMap);
+            //    txt = Uri.EscapeDataString(txt);
+            //    json.SetDictValue("map", txt);
+            //}
+            //if (System.IO.File.Exists(pathCs))
+            //{
+            //    var txt = System.IO.File.ReadAllText(pathAbi);
+            //    txt = Uri.EscapeDataString(txt);
+            //    json.SetDictValue("abi", txt);
+            //}
+
+            //return json.ToString();
+        }
+
+        private string getFile2Json(string hash)
+        {
             if (hash.IndexOf("0x") == -1)
             {
                 hash = "0x" + hash;
