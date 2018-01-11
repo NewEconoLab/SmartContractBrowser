@@ -326,7 +326,7 @@ namespace remotebuilderCore
                 J["cs"] = HttpUtility.UrlDecode((string)J["cs"]);
                 J["map"] = JArray.Parse(HttpUtility.UrlDecode((string)J["map"]));
                 J["abi"] = JObject.Parse(HttpUtility.UrlDecode((string)J["abi"]));
-                mh.insertJson2MongoOnlyonce(JsonConvert.SerializeObject(J),hash);
+                mh.insertObjectByCheckKey("contractWarehouse", JsonConvert.SerializeObject(J),"hash",hash);
             }
             catch (Exception e)
             {
