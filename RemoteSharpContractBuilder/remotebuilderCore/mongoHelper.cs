@@ -28,17 +28,26 @@ namespace remotebuilderCore
             mongodbDatabase = config["mongodbDatabase"];
         }
 
-        public void insertJson2MongoOnlyonce(string json,string key)
+        public void insertObjectByCheckKey(string coll,string json,string key,string value)
         {
             var client = new MongoClient(mongodbConnStr);
             var database = client.GetDatabase(mongodbDatabase);
-            var collection = database.GetCollection<BsonDocument>("contractWarehouse");
 
-            var query = collection.Find(BsonDocument.Parse("{hash:'"+ key + "'}")).ToList();
+            //var a = Newtonsoft.Json.JsonConvert.SerializeObject(data);
+
+            var collection = database.GetCollection<BsonDocument>(coll);
+            var query = collection.Find(BsonDocument.Parse("{'" + key + "':'"+ value + "'}")).ToList();
 
             if (query.Count == 0)
             {
-                collection.InsertOne(BsonDocument.Parse(json));
+                try {
+                    BsonDocument bson = BsonDocument.Parse(json);
+                    bson.Add("getTime", DateTime.Now);
+                    collection.InsertOne(bson);
+                }
+                catch (Exception e) {
+                    var a = e;
+                }
             }     
 
             client = null;
